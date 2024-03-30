@@ -3,7 +3,7 @@ package sqldb
 import (
 	"fmt"
 
-	"github.com/ardanlabs/service/business/data/transaction"
+	"github.com/duexcoast/skedjuler/business/data/transaction"
 	"github.com/jmoiron/sqlx"
 )
 

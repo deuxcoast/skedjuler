@@ -4,7 +4,7 @@ package mid
 import (
 	"context"
 
-	"github.com/ardanlabs/service/business/web/auth"
+	"github.com/duexcoast/skedjuler/business/web/auth"
 )
 
 type ctxKey int
