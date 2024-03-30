@@ -13,9 +13,9 @@ import (
 	"time"
 
 	"github.com/ardanlabs/conf/v3"
-	"github.com/duexcoast/skedjuler/app/services/sales-api/build/all"
-	"github.com/duexcoast/skedjuler/app/services/sales-api/build/crud"
-	"github.com/duexcoast/skedjuler/app/services/sales-api/build/reporting"
+	"github.com/duexcoast/skedjuler/app/services/scheduler-api/build/all"
+	"github.com/duexcoast/skedjuler/app/services/scheduler-api/build/crud"
+	"github.com/duexcoast/skedjuler/app/services/scheduler-api/build/reporting"
 	"github.com/duexcoast/skedjuler/business/core/crud/delegate"
 	"github.com/duexcoast/skedjuler/business/data/sqldb"
 	"github.com/duexcoast/skedjuler/business/web/auth"
@@ -53,7 +53,7 @@ func main() {
 		return web.GetTraceID(ctx)
 	}
 
-	log = logger.NewWithEvents(os.Stdout, logger.LevelInfo, "SALES-API", traceIDFn, events)
+	log = logger.NewWithEvents(os.Stdout, logger.LevelInfo, "SCHEDULER-API", traceIDFn, events)
 
 	// -------------------------------------------------------------------------
 
@@ -94,20 +94,20 @@ func run(ctx context.Context, log *logger.Logger) error {
 		DB struct {
 			User         string `conf:"default:postgres"`
 			Password     string `conf:"default:postgres,mask"`
-			HostPort     string `conf:"default:database-service.sales-system.svc.cluster.local"`
+			HostPort     string `conf:"default:database-service.scheduler-system.svc.cluster.local"`
 			Name         string `conf:"default:postgres"`
 			MaxIdleConns int    `conf:"default:2"`
 			MaxOpenConns int    `conf:"default:0"`
 			DisableTLS   bool   `conf:"default:true"`
 		}
-		Tempo struct {
-			ReporterURI string  `conf:"default:tempo.sales-system.svc.cluster.local:4317"`
-			ServiceName string  `conf:"default:sales-api"`
-			Probability float64 `conf:"default:0.05"`
-			// Shouldn't use a high Probability value in non-developer systems.
-			// 0.05 should be enough for most systems. Some might want to have
-			// this even lower.
-		}
+		// Tempo struct {
+		// 	ReporterURI string  `conf:"default:tempo.sales-system.svc.cluster.local:4317"`
+		// 	ServiceName string  `conf:"default:sales-api"`
+		// 	Probability float64 `conf:"default:0.05"`
+		// Shouldn't use a high Probability value in non-developer systems.
+		// 0.05 should be enough for most systems. Some might want to have
+		// this even lower.
+		// }
 	}{
 		Version: conf.Version{
 			Build: build,
@@ -115,7 +115,7 @@ func run(ctx context.Context, log *logger.Logger) error {
 		},
 	}
 
-	const prefix = "SALES"
+	const prefix = "SCHEDULER"
 	help, err := conf.Parse(prefix, &cfg)
 	if err != nil {
 		if errors.Is(err, conf.ErrHelpWanted) {
