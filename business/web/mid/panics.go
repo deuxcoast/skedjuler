@@ -2,31 +2,32 @@ package mid
 
 import (
 	"context"
+	"fmt"
 	"net/http"
+	"runtime/debug"
 
 	"github.com/duexcoast/skedjuler/business/web/metrics"
 	"github.com/duexcoast/skedjuler/foundation/web"
 )
 
-// Metrics updates program counters.
-func Metrics() web.MidHandler {
+// Panics recovers from panics and converts the panic to an error so it is
+// reported in Metrics and handled in Errors.
+func Panics() web.MidHandler {
 	m := func(handler web.Handler) web.Handler {
-		h := func(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-			ctx = metrics.Set(ctx)
+		h := func(ctx context.Context, w http.ResponseWriter, r *http.Request) (err error) {
 
-			err := handler(ctx, w, r)
+			// Defer a function to recover from a panic and set the err return
+			// variable after the fact.
+			defer func() {
+				if rec := recover(); rec != nil {
+					trace := debug.Stack()
+					err = fmt.Errorf("PANIC [%v] TRACE[%s]", rec, string(trace))
 
-			n := metrics.AddRequests(ctx)
+					metrics.AddPanics(ctx)
+				}
+			}()
 
-			if n%1000 == 0 {
-				metrics.AddGoroutines(ctx)
-			}
-
-			if err != nil {
-				metrics.AddErrors(ctx)
-			}
-
-			return err
+			return handler(ctx, w, r)
 		}
 
 		return h

@@ -52,11 +52,13 @@ all: service
 
 service:
 	docker build \
-		-f zarf/docker/dockerfile.service \
+		-f zarf/docker/Dockerfile.service \
 		-t $(SERVICE_IMAGE) \
 		--build-arg BUILD_REF=$(VERSION) \
 		--build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
 		.
+
+		
 
 
 # ==============================================================================
@@ -84,3 +86,42 @@ deps-cleancache:
 
 list:
 	go list -mod=mod all
+
+# ==============================================================================
+# Class Stuff
+
+run:
+	go run app/services/scheduler-api/main.go | go run app/tooling/logfmt/main.go
+
+run-help:
+	go run app/services/scheduler-api/main.go --help | go run app/tooling/logfmt/main.go
+
+run-db:
+	docker run \
+		--name pg-skedjuler-dev --rm \
+		--hostname localhost \
+		-e POSTGRES_USER=postgres \
+		-e POSTGRES_PASSWORD=postgres \
+		-e PGDATA=/var/lib/postgresql/data/pgdata \
+		-v /tmp:/var/lib/postgresql/data \
+		--network mynet \
+		-p 5432:5432 \
+		-p 8080:8080 \
+		$(POSTGRES)
+
+compose:
+	docker compose \
+		--env-file .env \
+		up -d
+
+
+live:
+	curl -il http://localhost:3000/v1/liveness
+
+curl-create:
+	curl -il -X POST \
+	-H "Authorization: Bearer ${TOKEN}" \
+	-H 'Content-Type: application/json' \
+	-d '{"name":"bill","email":"b@gmail.com","roles":["ADMIN"],"department":"IT","password":"123","passwordConfirm":"123"}' \
+	http://localhost:3000/v1/users
+

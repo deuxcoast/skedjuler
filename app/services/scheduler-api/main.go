@@ -188,19 +188,19 @@ func run(ctx context.Context, log *logger.Logger) error {
 	// -------------------------------------------------------------------------
 	// Start Tracing Support
 
-	log.Info(ctx, "startup", "status", "initializing OT/Tempo tracing support")
+	// log.Info(ctx, "startup", "status", "initializing OT/Tempo tracing support")
 
-	traceProvider, err := startTracing(
-		cfg.Tempo.ServiceName,
-		cfg.Tempo.ReporterURI,
-		cfg.Tempo.Probability,
-	)
-	if err != nil {
-		return fmt.Errorf("starting tracing: %w", err)
-	}
-	defer traceProvider.Shutdown(context.Background())
-
-	tracer := traceProvider.Tracer("service")
+	// traceProvider, err := startTracing(
+	// 	cfg.Tempo.ServiceName,
+	// 	cfg.Tempo.ReporterURI,
+	// 	cfg.Tempo.Probability,
+	// )
+	// if err != nil {
+	// 	return fmt.Errorf("starting tracing: %w", err)
+	// }
+	// defer traceProvider.Shutdown(context.Background())
+	//
+	// tracer := traceProvider.Tracer("service")
 
 	// -------------------------------------------------------------------------
 	// Start Debug Service
@@ -228,7 +228,7 @@ func run(ctx context.Context, log *logger.Logger) error {
 		Delegate: delegate.New(log),
 		Auth:     auth,
 		DB:       db,
-		Tracer:   tracer,
+		// Tracer:   tracer,
 	}
 
 	api := http.Server{

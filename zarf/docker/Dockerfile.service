@@ -28,6 +28,7 @@ ARG BUILD_DATE
 ARG BUILD_REF
 RUN addgroup -g 1000 -S scheduler && \
     adduser -u 1000 -h /service -G scheduler -S scheduler
+COPY --from=build_scheduler-api --chown=scheduler:scheduler /service/zarf/keys/. /service/zarf/keys/.
 # COPY --from=build_scheduler-api --chown=scheduler:scheduler /service/app/tooling/scheduler-admin/scheduler-admin /service/scheduler-admin
 COPY --from=build_scheduler-api --chown=scheduler:scheduler /service/app/services/scheduler-api/scheduler-api /service/scheduler-api
 WORKDIR /service
