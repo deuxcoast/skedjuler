@@ -1,0 +1,39 @@
+version: "3.8"
+
+name: skedjuler
+services:
+  scheduler-api:
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: zarf/docker/Dockerfile.service
+    hostname: scheduler-api
+    networks:
+      - mynet
+    ports:
+      - 3000:3000
+      - 4000:4000
+    deploy:
+      restart_policy:
+        condition: on-failure
+  db:
+    image: postgres:16.2
+    hostname: db
+    container_name: pg-db-scheduler
+    networks:
+      - mynet
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?database password not set}
+    volumes:
+      - pg-scheduler:/var/lib/postgresql/data
+
+volumes:
+  pg-scheduler:
+
+networks:
+  mynet:
+    driver: bridge

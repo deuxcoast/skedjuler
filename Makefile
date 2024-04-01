@@ -58,7 +58,32 @@ service:
 		--build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
 		.
 
-		
+# ==============================================================================
+# Administration
+
+migrate:
+	export SALES_DB_HOST_PORT=localhost; go run app/tooling/scheduler-admin/main.go migrate
+
+seed: migrate
+	export SALES_DB_HOST_PORT=localhost; go run app/tooling/scheduler-admin/main.go seed
+
+pgcli:
+	pgcli postgresql://postgres:postgres@localhost
+
+liveness:
+	curl -il http://localhost:3000/v1/liveness
+
+readiness:
+	curl -il http://localhost:3000/v1/readiness
+
+token-gen:
+	export SALES_DB_HOST_PORT=localhost; go run app/tooling/scheduler-admin/main.go gentoken 5cf37266-3473-4006-984f-9325122678b7 54bb2165-71e1-41a6-af3e-7da4a0e1e2c1
+
+docs:
+	go run app/tooling/docs/main.go --browser
+
+query-local:
+	@curl -s "http://localhost:3000/users?page=1&rows=2&orderBy=name,ASC"
 
 
 # ==============================================================================
@@ -88,6 +113,30 @@ list:
 	go list -mod=mod all
 
 # ==============================================================================
+# Hitting endpoints
+
+token:
+	curl -il \
+	--user "admin@example.com:gophers" http://localhost:3000/v1/users/token/54bb2165-71e1-41a6-af3e-7da4a0e1e2c1
+
+# export TOKEN="COPY TOKEN STRING FROM LAST CALL"
+
+users:
+	curl -il \
+	-H "Authorization: Bearer ${TOKEN}" "http://localhost:3000/v1/users?page=1&rows=2"
+
+load:
+	hey -m GET -c 100 -n 1000 \
+	-H "Authorization: Bearer ${TOKEN}" "http://localhost:3000/v1/users?page=1&rows=2"
+
+otel-test:
+	curl -il \
+	-H "Traceparent: 00-918dd5ecf264712262b68cf2ef8b5239-896d90f23f69f006-01" \
+	--user "admin@example.com:gophers" http://localhost:3000/v1/users/token/54bb2165-71e1-41a6-af3e-7da4a0e1e2c1
+
+
+
+# ==============================================================================
 # Class Stuff
 
 run:
@@ -95,25 +144,6 @@ run:
 
 run-help:
 	go run app/services/scheduler-api/main.go --help | go run app/tooling/logfmt/main.go
-
-run-db:
-	docker run \
-		--name pg-skedjuler-dev --rm \
-		--hostname localhost \
-		-e POSTGRES_USER=postgres \
-		-e POSTGRES_PASSWORD=postgres \
-		-e PGDATA=/var/lib/postgresql/data/pgdata \
-		-v /tmp:/var/lib/postgresql/data \
-		--network mynet \
-		-p 5432:5432 \
-		-p 8080:8080 \
-		$(POSTGRES)
-
-compose:
-	docker compose \
-		--env-file .env \
-		up -d
-
 
 live:
 	curl -il http://localhost:3000/v1/liveness
