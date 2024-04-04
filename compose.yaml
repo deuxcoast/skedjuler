@@ -7,13 +7,13 @@ services:
       - db
     build:
       context: .
-      dockerfile: zarf/docker/Dockerfile.service
+      dockerfile: ./zarf/docker/Dockerfile.service
     hostname: scheduler-api
     networks:
       - mynet
     ports:
-      - 3000:3000
       - 4000:4000
+      - 5000:5000
     deploy:
       restart_policy:
         condition: on-failure
@@ -30,6 +30,23 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:?database password not set}
     volumes:
       - pg-scheduler:/var/lib/postgresql/data
+  next-app:
+    container_name: next-app
+    build:
+      context: ./app/frontends/skedjuler/
+      dockerfile: dev.Dockerfile
+    environment:
+      - NODE_ENV=development
+    env_file:
+      - ./app/frontends/skedjuler/.env
+    volumes:
+      - ./app/frontends/skedjuler/src:/app/src
+      - ./app/frontends/skedjuler/public:/app/public
+    restart: always
+    ports:
+      - 3000:3000
+    networks:
+      - mynet
 
 volumes:
   pg-scheduler:

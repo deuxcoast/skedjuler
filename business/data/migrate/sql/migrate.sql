@@ -1,6 +1,6 @@
 -- Version: 1.01
 -- Description: Create table users
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
 	user_id       UUID        NOT NULL,
 	name          TEXT        NOT NULL,
 	email         TEXT UNIQUE NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE users (
 
 -- Version: 1.02
 -- Description: Create table products
-CREATE TABLE products (
+CREATE TABLE IF NOT EXISTS products (
 	product_id   UUID           NOT NULL,
     user_id      UUID           NOT NULL,
 	name         TEXT           NOT NULL,
@@ -44,11 +44,11 @@ SELECT
 FROM
     products AS p
 JOIN
-    users AS u ON u.user_id = p.user_id
+    users AS u ON u.user_id = p.user_id;
 
 -- Version: 1.04
 -- Description: Create table homes
-CREATE TABLE homes (
+CREATE TABLE IF NOT EXISTS homes (
     home_id       UUID       NOT NULL,
     type          TEXT       NOT NULL,
     user_id       UUID       NOT NULL,
