@@ -37,13 +37,13 @@ dev-brew:
 dev-docker:
 	docker pull $(GOLANG)
 	docker pull $(ALPINE)
-	docker pull $(KIND)
+	# docker pull $(KIND)
 	docker pull $(POSTGRES)
-	docker pull $(GRAFANA)
-	docker pull $(PROMETHEUS)
-	docker pull $(TEMPO)
-	docker pull $(LOKI)
-	docker pull $(PROMTAIL)
+	# docker pull $(GRAFANA)
+	# docker pull $(PROMETHEUS)
+	# docker pull $(TEMPO)
+	# docker pull $(LOKI)
+	# docker pull $(PROMTAIL)
 
 # ==============================================================================
 # Building containers
@@ -57,6 +57,17 @@ service:
 		--build-arg BUILD_REF=$(VERSION) \
 		--build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
 		.
+
+dev-compose-build:
+	docker compose up --build \
+		--build-arg BUILD_REF=$(VERSION) \
+		--build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
+
+dev-compose-up:
+	docker compose up
+	
+dev-compose-down:
+	docker compose down
 
 # ==============================================================================
 # Administration

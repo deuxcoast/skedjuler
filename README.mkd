@@ -1,0 +1,18 @@
+## Run Project Locally
+
+1. Ensure Go Binary is [installed on your machine](https://go.dev/doc/install).
+
+2. To build the necessary Docker containers, run the following command in the
+   project root. This make take a few minutes to complete.
+
+`make dev-compose-build`
+
+3. TODO: I haven't created the script yet for creating the necessary database
+   that the application expects to connect to. The database name is `skedjuler_db`.
+
+4. To shut the project down run the following command:
+
+`make dev-compose-down`
+
+5. Unless the Docker images have changed, we can run `make dev-compose-up`, to
+   skip rebuilding the containers every time.
