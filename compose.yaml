@@ -33,16 +33,16 @@ services:
   next-app:
     container_name: front-end
     build:
-      context: ./app/frontends/skedjuler/
+      context: ./app/frontends/skdjlr/
       dockerfile: dev.Dockerfile
     environment:
       - NODE_ENV=development
     env_file:
-      - ./app/frontends/skedjuler/.env
+      - ./app/frontends/skdjlr/.env
     ports:
       - 3000:3000
     volumes:
-      - ./app/frontends/skedjuler/.:/app
+      - ./app/frontends/skdjlr/.:/app
       - /app/node_modules
     restart: always
     networks:
