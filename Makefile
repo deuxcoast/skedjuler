@@ -71,10 +71,10 @@ pgcli:
 	pgcli postgresql://postgres:postgres@localhost
 
 liveness:
-	curl -il http://localhost:3000/v1/liveness
+	curl -il http://localhost:4000/v1/liveness
 
 readiness:
-	curl -il http://localhost:3000/v1/readiness
+	curl -il http://localhost:4000/v1/readiness
 
 token-gen:
 	export SALES_DB_HOST_PORT=localhost; go run app/tooling/scheduler-admin/main.go gentoken 5cf37266-3473-4006-984f-9325122678b7 54bb2165-71e1-41a6-af3e-7da4a0e1e2c1
@@ -83,7 +83,7 @@ docs:
 	go run app/tooling/docs/main.go --browser
 
 query-local:
-	@curl -s "http://localhost:3000/users?page=1&rows=2&orderBy=name,ASC"
+	@curl -s "http://localhost:4000/users?page=1&rows=2&orderBy=name,ASC"
 
 
 # ==============================================================================
@@ -117,22 +117,22 @@ list:
 
 token:
 	curl -il \
-	--user "admin@example.com:gophers" http://localhost:3000/v1/users/token/54bb2165-71e1-41a6-af3e-7da4a0e1e2c1
+	--user "admin@example.com:gophers" http://localhost:4000/v1/users/token/54bb2165-71e1-41a6-af3e-7da4a0e1e2c1
 
 # export TOKEN="COPY TOKEN STRING FROM LAST CALL"
 
 users:
 	curl -il \
-	-H "Authorization: Bearer ${TOKEN}" "http://localhost:3000/v1/users?page=1&rows=2"
+	-H "Authorization: Bearer ${TOKEN}" "http://localhost:4000/v1/users?page=1&rows=2"
 
 load:
 	hey -m GET -c 100 -n 1000 \
-	-H "Authorization: Bearer ${TOKEN}" "http://localhost:3000/v1/users?page=1&rows=2"
+	-H "Authorization: Bearer ${TOKEN}" "http://localhost:4000/v1/users?page=1&rows=2"
 
 otel-test:
 	curl -il \
 	-H "Traceparent: 00-918dd5ecf264712262b68cf2ef8b5239-896d90f23f69f006-01" \
-	--user "admin@example.com:gophers" http://localhost:3000/v1/users/token/54bb2165-71e1-41a6-af3e-7da4a0e1e2c1
+	--user "admin@example.com:gophers" http://localhost:4000/v1/users/token/54bb2165-71e1-41a6-af3e-7da4a0e1e2c1
 
 
 
@@ -146,12 +146,12 @@ run-help:
 	go run app/services/scheduler-api/main.go --help | go run app/tooling/logfmt/main.go
 
 live:
-	curl -il http://localhost:3000/v1/liveness
+	curl -il http://localhost:4000/v1/liveness
 
 curl-create:
 	curl -il -X POST \
 	-H "Authorization: Bearer ${TOKEN}" \
 	-H 'Content-Type: application/json' \
 	-d '{"name":"bill","email":"b@gmail.com","roles":["ADMIN"],"department":"IT","password":"123","passwordConfirm":"123"}' \
-	http://localhost:3000/v1/users
+	http://localhost:4000/v1/users
 

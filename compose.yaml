@@ -31,7 +31,7 @@ services:
     volumes:
       - pg-scheduler:/var/lib/postgresql/data
   next-app:
-    container_name: next-app
+    container_name: front-end
     build:
       context: ./app/frontends/skedjuler/
       dockerfile: dev.Dockerfile
@@ -39,12 +39,12 @@ services:
       - NODE_ENV=development
     env_file:
       - ./app/frontends/skedjuler/.env
-    volumes:
-      - ./app/frontends/skedjuler/src:/app/src
-      - ./app/frontends/skedjuler/public:/app/public
-    restart: always
     ports:
       - 3000:3000
+    volumes:
+      - ./app/frontends/skedjuler/.:/app
+      - /app/node_modules
+    restart: always
     networks:
       - mynet
 
