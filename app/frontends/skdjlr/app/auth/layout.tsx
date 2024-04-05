@@ -7,9 +7,10 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="w-full lg:grid lg:min-h-[600px] lg:grid-cols-2 xl:min-h-[800px]">
-      <div className="flex items-center justify-center py-12">{children}</div>
-      <div className="hidden bg-muted lg:block">
+    <div className="flex w-screen flex-wrap">
+      <div className="flex w-full flex-col md:w-1/2">{children}</div>
+      {/* <div className="flex items-center justify-center py-12">{children}</div> */}
+      <div className="relative hidden h-screen select-none bg-blue-600 bg-gradient-to-br md:block md:w-1/2">
         <Image
           src={gradientBackground}
           alt="Pastel gradient"

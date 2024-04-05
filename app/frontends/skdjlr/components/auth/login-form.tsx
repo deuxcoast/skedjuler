@@ -9,6 +9,8 @@ import { LoginSchema } from "@/schema";
 import { Input } from "../ui/input";
 import FormItemWrapper from "../form-item-wrapper";
 import { Button } from "../ui/button";
+import GoogleIcon from "../icons/google-icon";
+import CardWrapper from "./card-wrapper";
 
 export default function LoginForm() {
   const [error, setError] = useState<string | undefined>("");
@@ -75,7 +77,7 @@ export default function LoginForm() {
           Login
         </Button>
         <Button variant="outline" className="w-full">
-          Login with Google
+          <GoogleIcon className="mr-2" /> Login with Google
         </Button>
       </form>
     </Form>

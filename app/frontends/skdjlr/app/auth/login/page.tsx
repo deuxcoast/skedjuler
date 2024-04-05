@@ -1,5 +1,5 @@
-import LoginTile from "@/components/auth/login-tile";
+import LoginCard from "@/components/auth/login-card";
 
-export default function Login() {
-  return <LoginTile />;
+export default function LoginPage() {
+  return <LoginCard />;
 }
