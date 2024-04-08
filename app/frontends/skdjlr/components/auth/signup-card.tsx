@@ -1,5 +1,6 @@
 import CardWrapper from "./card-wrapper";
 import LoginForm from "./login-form";
+import SignUpForm from "./signup-form";
 
 export default function SignupCard() {
   return (
@@ -10,7 +11,7 @@ export default function SignupCard() {
       footerLinkLabel="Login"
       footerHref="/auth/login"
     >
-      <LoginForm />
+      <SignUpForm />
     </CardWrapper>
   );
 }

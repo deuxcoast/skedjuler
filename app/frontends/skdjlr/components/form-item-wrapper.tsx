@@ -10,7 +10,7 @@ interface FormItemWrapperProps<
   TName extends FieldPath<TFieldValues>,
 > {
   field: ControllerRenderProps<TFieldValues, TName>;
-  text: string;
+  label: string;
   link?: LinkProp;
   disabled: boolean;
   placeholder: string;
@@ -28,6 +28,7 @@ export default function FormItemWrapper<
   TName extends FieldPath<TFieldValues>,
 >({
   field,
+  label,
   link = {
     include: false,
     text: "",
@@ -41,7 +42,7 @@ export default function FormItemWrapper<
     <FormItem>
       {link.include ? (
         <div className="flex items-center">
-          <FormLabel>{firstLetterUppercase(type)}</FormLabel>
+          <FormLabel>{label}</FormLabel>
           <Link
             href={link.href}
             className="ml-auto inline-block text-sm underline"
@@ -50,7 +51,7 @@ export default function FormItemWrapper<
           </Link>
         </div>
       ) : (
-        <FormLabel>{firstLetterUppercase(type)}</FormLabel>
+        <FormLabel>{label}</FormLabel>
       )}
       <FormControl>
         <Input

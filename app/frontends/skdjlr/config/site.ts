@@ -9,7 +9,11 @@ export const siteConfig = {
   },
   mainNav: [
     {
-      title: "Schedule Designer",
+      title: "Dashboard",
+      href: "/dashboard",
+    },
+    {
+      title: "Scheduler",
       href: "/scheduler",
     },
     {},

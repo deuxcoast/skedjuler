@@ -1,21 +1,18 @@
-import ScheduleHeader from "@/components/scheduleHeader";
-import { SidebarMenu } from "@/components/ui/sidebar-menu";
+import SchedulerHeader from "@/components/scheduler-header";
 
-interface AppLayoutProps {
+interface SchedulerAppLayoutProps {
   children: React.ReactNode;
 }
 
-export default function AppLayout({ children }: AppLayoutProps) {
+export default function SchedulerAppLayout({
+  children,
+}: SchedulerAppLayoutProps) {
   return (
     <>
-      <ScheduleHeader />
-      <div className="flex">
-        <div className="hidden sm:block">
-          <SidebarMenu />
-        </div>
-        <main className="flex">{children}</main>
+      <SchedulerHeader />
+      <div className="flex max-w-screen-2xl h-screen justify-center align-middle ">
+        {children}
       </div>
-      {/* <SiteFooter /> */}
     </>
   );
 }

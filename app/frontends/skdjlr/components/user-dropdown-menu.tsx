@@ -54,10 +54,10 @@ export function UserDropdownMenu() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/settings">Account Settings</Link>
+          <Link href="/profile">Account Settings</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/profile">Business Profile</Link>
+          <Link href="/account">Business Profile</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href="/invite">Invite Users</Link>
