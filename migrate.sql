@@ -6,7 +6,9 @@ CREATE TABLE restaurants (
 
 CREATE TABLE employees (
   employee_id bigserial NOT NULL,
-  role_id bigserial NOT NULL,
+  -- TODO: this is a many to many relationship (how do I codify that?)
+  -- Do I need to create a Join Table?
+  role_id bigserial NOT NULL, 
   restaurant_id bigserial NOT NULL,
   first_name varchar(255) NOT NULL,
   last_name varchar(255) NOT NULL,

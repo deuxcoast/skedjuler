@@ -56,6 +56,9 @@ const config = {
           DEFAULT: "hsl(var(--cell))",
           foreground: "hsl(var(--cell-foreground))",
         },
+        // TODO: I defined this the wrong way. currently, this is being
+        // referenced as the tailwind class `border-shiftnode-border`
+        // I'd rather be able to access it as `border-shift-node`
         shiftnode: {
           border: "hsl(var(--shift-node-border))",
         },
