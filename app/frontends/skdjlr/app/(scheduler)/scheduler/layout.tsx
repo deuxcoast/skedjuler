@@ -1,4 +1,3 @@
-import SchedulerHeader from "@/components/scheduler-header";
 import { Sidebar } from "@/components/sidebar-menu";
 import { playlists } from "@/data/playlists";
 

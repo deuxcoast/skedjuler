@@ -36,6 +36,8 @@ interface SettingsLayoutProps {
   children: React.ReactNode;
 }
 
+// TODO: set a fixed width for all settings pages. Currently the width is
+// different on each page.
 export default function SettingsLayout({ children }: SettingsLayoutProps) {
   return (
     <>

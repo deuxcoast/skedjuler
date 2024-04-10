@@ -13,6 +13,7 @@ export default function AuthLayout({
       <div className="relative hidden h-screen select-none bg-blue-600 bg-gradient-to-br md:block md:w-1/2">
         <Image
           src={gradientBackground}
+          priority
           alt="Pastel gradient"
           className="h-full w-full left-1/2 bg-cover bg-center"
         />

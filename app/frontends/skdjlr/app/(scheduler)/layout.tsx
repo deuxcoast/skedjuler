@@ -10,7 +10,7 @@ export default function SchedulerAppLayout({
   return (
     <>
       <SchedulerHeader />
-      <div className="flex max-w-screen-2xl h-screen justify-center align-middle ">
+      <div className="container flex max-w-screen-2xl h-screen justify-center align-middle ">
         {children}
       </div>
     </>

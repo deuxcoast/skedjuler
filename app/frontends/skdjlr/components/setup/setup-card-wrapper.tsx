@@ -20,7 +20,7 @@ export default function SetupCardWrapper({
 }: CardWrapperProps) {
   return (
     <Card className="m-auto md:max-w-2xl">
-      <CardHeader>
+      <CardHeader className="space-y-2">
         <CardTitle>{headerLabel}</CardTitle>
         <CardDescription>{subHeaderLabel}</CardDescription>
       </CardHeader>
