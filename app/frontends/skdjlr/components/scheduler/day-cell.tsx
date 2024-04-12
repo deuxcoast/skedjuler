@@ -20,12 +20,12 @@ export default function DayCell({ day }: DayCellProps) {
     // - Fix the overlapping border
     // - Possible solution: set border-right and border-bottom to none, but apply
     // last-elem rules where the last elements do have right and bottom borders
-    <div className="p-2 border border-foreground lg:min-w-44 bg-cell flex-col">
-      <ShiftNode
-        shiftRole="Server"
-        duration={shiftDuration}
-        published={false}
-      />
+    <div className="p-2 border border-foreground bg-cell flex-col">
+      {/* <ShiftNode */}
+      {/*   shiftRole="Server" */}
+      {/*   duration={shiftDuration} */}
+      {/*   published={false} */}
+      {/* /> */}
     </div>
   );
 }

@@ -2,14 +2,23 @@
 
 import { useContext, useState } from "react";
 import SchedulerContext from "./SchedulerContext";
-import dayjs from "dayjs";
 import { SchedulerProviderProps } from "./types";
+import dayjs from "dayjs";
+import weekOfYear from "dayjs/plugin/weekOfYear";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import advancedFormat from "dayjs/plugin/advancedFormat";
+
+dayjs.extend(weekOfYear);
+dayjs.extend(timezone);
+dayjs.extend(utc);
+dayjs.extend(advancedFormat);
 
 export default function SchedulerContextProvider({
   children,
 }: SchedulerProviderProps) {
   const [weekIndex, setWeekIndex] = useState(dayjs().week());
-  const [dayScheduleStarts, setDayScheduleStarts] = useState(0);
+  const [dayScheduleStarts, setDayScheduleStarts] = useState(4);
   return (
     <SchedulerContext.Provider
       value={{

@@ -9,6 +9,10 @@ export default function SchedulerGridHeader({
 }: SchedulerHeaderCellProps) {
   return (
     <>
+      {/* TODO: this is currently just an empty filler div for the 8 columns, but
+       * the styling needs to be improved - should it stay empty? what information
+       * should be displayed here above the column of employees? */}
+      <div></div>
       {week.map((day) => (
         <SchedulerGridHeaderCell key={day.date()} day={day} />
       ))}

@@ -114,3 +114,5 @@ const SampleData: TestData = {
   ],
   scheduledShifts: [],
 };
+
+export { SampleData };
