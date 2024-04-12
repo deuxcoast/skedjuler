@@ -1,14 +1,5 @@
-import { DAYS_IN_A_WEEK, DAYS_IN_A_WEEK_ZERO_INDEX } from "@/types/WeekDay";
+import { DAYS_IN_A_WEEK } from "@/types/WeekDay";
 import dayjs from "dayjs";
-import weekOfYear from "dayjs/plugin/weekOfYear";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
-import advancedFormat from "dayjs/plugin/advancedFormat";
-
-dayjs.extend(weekOfYear);
-dayjs.extend(timezone);
-dayjs.extend(utc);
-dayjs.extend(advancedFormat);
 
 // TODO: Write tests for this function, because I am not extremely confident
 // that it is robust.
@@ -28,13 +19,12 @@ dayjs.extend(advancedFormat);
 export function getWeek(dayScheduleStarts: number, week = dayjs().week()) {
   const year = dayjs().year();
   const today = dayjs().day();
-  console.log(dayjs(new Date(2024, 0, 1)).week());
 
   let firstDayOfWeek = dayjs(new Date(year, 0, 0)).week(week);
-  const prevWeekDifferential = DAYS_IN_A_WEEK_ZERO_INDEX - dayScheduleStarts;
+  const prevWeekDifferential = DAYS_IN_A_WEEK - dayScheduleStarts;
 
   if (dayScheduleStarts > 0 && dayScheduleStarts <= today) {
-    firstDayOfWeek = firstDayOfWeek.add(dayScheduleStarts + 1, "day");
+    firstDayOfWeek = firstDayOfWeek.add(dayScheduleStarts, "day");
   } else if (dayScheduleStarts > today) {
     firstDayOfWeek = firstDayOfWeek.subtract(prevWeekDifferential, "day");
   }

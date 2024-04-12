@@ -12,6 +12,4 @@ type ObjectValues<T> = T[keyof T];
 
 export type DayOfWeek = ObjectValues<typeof DAY_OF_WEEK>;
 
-export const DAYS_IN_A_WEEK_ZERO_INDEX = 6;
-
 export const DAYS_IN_A_WEEK = 7;
