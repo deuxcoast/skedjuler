@@ -11,7 +11,7 @@ const ShiftNodeCard = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "flex-shrink border-shiftnode-border rounded-none border bg-card text-card-foreground shadow-sm",
+      "flex-shrink border border-foreground rounded-lg bg-card text-card-foreground shadow-sm",
       className,
     )}
     {...props}

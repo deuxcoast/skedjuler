@@ -19,7 +19,9 @@ const config = {
     },
     extend: {
       colors: {
-        border: "hsl(var(--border))",
+        border: {
+          DEFAULT: "hsl(var(--border))",
+        },
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
@@ -56,13 +58,11 @@ const config = {
           DEFAULT: "hsl(var(--cell))",
           foreground: "hsl(var(--cell-foreground))",
         },
-        // TODO: I defined this the wrong way. currently, this is being
-        // referenced as the tailwind class `border-shiftnode-border`
-        // I'd rather be able to access it as `border-shift-node`
-        shiftnode: {
-          border: "hsl(var(--shift-node-border))",
-        },
       },
+      borderColor: {
+        scheduler: "hsl(var(--shift-node-border))",
+      },
+
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
@@ -81,6 +81,9 @@ const config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      gridTemplateRows: {
+        calendar: "auto 1fr 1fr",
       },
     },
   },

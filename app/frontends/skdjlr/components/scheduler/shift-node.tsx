@@ -28,7 +28,7 @@ export default function ShiftNode({
   published,
 }: ShiftNodeProps) {
   return (
-    <ShiftNodeCard className="min-w-24">
+    <ShiftNodeCard className="">
       <ShiftNodeContent className="space-y-1">
         <Badge>{shiftRole}</Badge>
         <ShiftDuration duration={duration} />

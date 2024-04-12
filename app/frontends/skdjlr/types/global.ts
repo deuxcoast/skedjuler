@@ -1,8 +1,10 @@
+import { UUID } from "crypto";
+
 export type SchedulerRow = {
   /*
    * Unique id of data
    */
-  id: string;
+  id: UUID;
 };
 
 export type SchedulerRowLabel = {
@@ -20,7 +22,7 @@ export type SchedulerProjectData = {
   /*
    * Unique id of data
    */
-  id: string;
+  id: UUID;
   /*
    * The start date from which the cell will render
    */
@@ -41,15 +43,33 @@ export type Day = {
   year: number;
 };
 
+export const DAY_OF_WEEK = {
+  SUNDAY: 0,
+  MONDAY: 1,
+  TUESDAY: 2,
+  WEDNESDAY: 3,
+  THURSDAY: 4,
+  FRIDAY: 5,
+  SATURDAY: 6,
+} as const;
+
+type ObjectValues<T> = T[keyof T];
+
+export type DayOfWeek = ObjectValues<typeof DAY_OF_WEEK>;
+
 export type Business = {
-  id: string;
+  id: UUID;
   name: string;
   industry: string;
+  /*
+   * What is day of the week do schedules for this business begin on?
+   */
+  startOfWorkWeek: DayOfWeek;
   // address information
 };
 
 export type Schedule = {
-  id: string;
+  id: UUID;
   /*
    * Name of the schedule. For example, "BOH", "FOH" or "Servers"
    */
@@ -58,15 +78,15 @@ export type Schedule = {
    * The IDs for the roles included in this schedule. This is used to determine
    * which employees are eligible for this schedule.
    */
-  rolesID: string[];
+  roles: UUID[];
 };
 
 export type Role = {
-  id: string;
+  id: UUID;
   name: string;
 };
 export type Employee = {
-  id: string;
+  id: UUID;
   firstName: string;
   lastName: string;
   rolesID: string[];
@@ -84,7 +104,7 @@ export type ShiftTime = {
 };
 
 export type ShiftType = {
-  id: string;
+  id: UUID;
   name: string;
   roleID: string;
   startTime: ShiftTime;
@@ -105,7 +125,7 @@ export type ShiftType = {
 };
 
 export type Shift = {
-  id: string;
+  id: UUID;
   employeeID: string;
   scheduleID: string;
   start: Date;

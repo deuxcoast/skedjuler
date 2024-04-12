@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Barlow, Inter } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./global.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import SchedulerContextProvider from "@/context/SchedulerProvider/SchedulerContextProvider";
 
 // const barlow = Barlow({
 //   subsets: ["latin"],
@@ -22,14 +23,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={barlow.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          // disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
+        <SchedulerContextProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            // disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </SchedulerContextProvider>
       </body>
       {/* <body className={inter.className}>{children}</body> */}
     </html>
