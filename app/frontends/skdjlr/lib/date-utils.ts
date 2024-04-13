@@ -1,9 +1,7 @@
 import { DAYS_IN_A_WEEK } from "@/types/WeekDay";
+import { ShiftTime } from "@/types/global";
 import dayjs from "dayjs";
 
-// TODO: Write tests for this function, because I am not extremely confident
-// that it is robust.
-//
 /**
  * Returns an array of Dayjs date objects for a given week in the year.
  *
@@ -36,4 +34,18 @@ export function getWeek(dayScheduleStarts: number, week = dayjs().week()) {
     .map(() => dayjs(new Date(year, firstDayOfWeek.month(), dayCount++)));
 
   return weekDates;
+}
+
+/** A small helper function that returns the shiftTemplate time as a formatted
+ * string using the Dayjs format string syntax.
+ *
+ * @param shiftTime - An objecting representing time in hours and minutes
+ * @param formatString - A format string to feed into the Dayjs format function
+ */
+export function formatShiftTemplateTime(
+  shiftTime: ShiftTime,
+  formatString: string,
+): string {
+  const time = dayjs().hour(shiftTime.hour).minute(shiftTime.minute);
+  return time.format(formatString);
 }

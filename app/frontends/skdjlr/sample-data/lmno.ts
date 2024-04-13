@@ -2,7 +2,7 @@ import {
   Business,
   Employee,
   Role,
-  ShiftType,
+  ShiftTemplate,
   Shift,
   DAY_OF_WEEK,
 } from "@/types/global";
@@ -11,7 +11,7 @@ type TestData = {
   business: Business;
   rolesID: Role[];
   employees: Employee[];
-  shiftTypes: ShiftType[];
+  shiftTemplates: ShiftTemplate[];
   scheduledShifts: Shift[];
 };
 
@@ -82,7 +82,7 @@ const SampleData: TestData = {
       email: "starrsarg12@gmail.com",
     },
   ],
-  shiftTypes: [
+  shiftTemplates: [
     {
       id: "018ecb49-e660-7697-9048-966e6393ce46",
       name: "Opener",

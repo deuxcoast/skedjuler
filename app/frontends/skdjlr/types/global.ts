@@ -97,13 +97,16 @@ export type Employee = {
 
 export type ShiftTime = {
   /*
-   * Hour of the shift in 24hr format
+    Hour of the shift from 0-23
    */
   hour: number;
+  /*
+   * Minute of the shift from 0-59
+   */
   minute: number;
 };
 
-export type ShiftType = {
+export type ShiftTemplate = {
   id: UUID;
   name: string;
   roleID: string;

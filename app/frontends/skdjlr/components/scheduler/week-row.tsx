@@ -13,7 +13,7 @@ export default function WeekRow({ week, employee }: WeekRowProps) {
     <>
       <EmployeeCell employee={employee} />
       {week.map((day) => (
-        <DayCell key={day.date()} day={day} />
+        <DayCell key={day.date()} day={day} employee={employee} />
       ))}
     </>
   );
