@@ -21,10 +21,10 @@ export function AddShiftToCell(props: AddShiftToCellProps) {
           <Plus />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[625px]">
+      <DialogContent className="sm:max-w-md">
         <DialogTitle>Add Shift</DialogTitle>
         <DialogDescription>
-          Create a custom shift or choose from one of your shift templates.
+          Choose a shift template or create a custom shift.
         </DialogDescription>
         <Tabs defaultValue="templates" className="w-[400px]">
           <div>
@@ -37,8 +37,8 @@ export function AddShiftToCell(props: AddShiftToCellProps) {
           <TabsContent value="templates" className="m-0">
             <AddTemplateShiftForm {...props} />
           </TabsContent>
-          <TabsContent value="templates" className="m-0">
-            {/* <AddCusjomShiftForm {...props} /> */}
+          <TabsContent value="custom" className="m-0">
+            <AddCustomShiftForm {...props} />
           </TabsContent>
         </Tabs>
       </DialogContent>

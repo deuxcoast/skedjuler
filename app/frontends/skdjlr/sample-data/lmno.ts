@@ -87,28 +87,16 @@ const SampleData: TestData = {
       id: "018ecb49-e660-7697-9048-966e6393ce46",
       name: "Opener",
       roleID: "018ecb4a-616b-7a46-b9d6-b2f39741083f",
-      startTime: {
-        hour: 15,
-        minute: 45,
-      },
-      endTime: {
-        hour: 22,
-        minute: 0,
-      },
+      start: "15:45",
+      end: "22:00",
       bgColor: "green",
     },
     {
       id: "018ecb5b-5d83-7400-80a4-50c71a80011c",
       name: "Closer",
       roleID: "018ecb4a-616b-7a46-b9d6-b2f39741083f",
-      startTime: {
-        hour: 17,
-        minute: 0,
-      },
-      endTime: {
-        hour: 23,
-        minute: 0,
-      },
+      start: "17:00",
+      end: "23:00",
       bgColor: "purple",
     },
   ],

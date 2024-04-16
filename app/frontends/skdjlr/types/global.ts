@@ -95,23 +95,19 @@ export type Employee = {
   email?: string;
 };
 
-export type ShiftTime = {
-  /*
-    Hour of the shift from 0-23
-   */
-  hour: number;
-  /*
-   * Minute of the shift from 0-59
-   */
-  minute: number;
-};
+type THours = `${number}${number}`;
+type TMinutes = `${number}${number}`;
+
+export type THourMinuteTime = `${THours}:${TMinutes}`;
+
+export type THourMinutePeriodTuple = [number, number, string];
 
 export type ShiftTemplate = {
   id: UUID;
   name: string;
   roleID: string;
-  startTime: ShiftTime;
-  endTime: ShiftTime;
+  start: THourMinuteTime;
+  end: THourMinuteTime;
   /*
    * TODO: We are going to create a pallete of selectable colors and define them
    * as CSS variables. The color field of the shift will be a const representing

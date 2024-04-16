@@ -1,4 +1,4 @@
-import { ShiftTemplate } from "@/types/global";
+import { ShiftTemplate, THourMinuteTime } from "@/types/global";
 import { Dayjs } from "dayjs";
 import { ReactNode } from "react";
 
@@ -6,8 +6,8 @@ export type SchedulerContextType = {
   weekIndex: number;
   daySelected: Dayjs;
   dayScheduleStarts: number;
-  defaultShiftStartHour: number;
-  defaultShiftEndHour: number;
+  defaultShiftStart: THourMinuteTime; // "HH:mm"
+  defaultShiftEnd: THourMinuteTime; // "HH:mm"
   shiftTemplates: ShiftTemplate[];
   setWeekIndex: (index: number) => void;
   setDaySelected: (day: Dayjs) => void;

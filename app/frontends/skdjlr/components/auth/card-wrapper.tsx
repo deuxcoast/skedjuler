@@ -28,7 +28,7 @@ export default function CardWrapper({
   footerHref,
 }: CardWrapperProps) {
   return (
-    <Card className="m-auto max-w-sm">
+    <Card className="m-auto">
       <CardHeader>
         <CardTitle className="text-2xl">{headerLabel}</CardTitle>
         <CardDescription>{subHeaderLabel}</CardDescription>

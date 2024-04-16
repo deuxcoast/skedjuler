@@ -23,8 +23,8 @@ export default function DayCell(props: DayCellProps) {
     // - Fix the overlapping border
     // - Possible solution: set border-right and border-bottom to none, but apply
     // last-elem rules where the last elements do have right and bottom borders
-    <div className="p-2 border border-foreground bg-cell flex flex-row justify-between ">
-      <div className="flex-grow inline-flex flex-col justify-start">a</div>
+    <div className="p-2 border min-h-16 border-foreground bg-cell flex flex-row justify-between ">
+      <div className="flex-grow inline-flex flex-col justify-start"></div>
       <div className="inline-flex flex-col justify-start">
         <AddShiftToCell {...props} />
       </div>

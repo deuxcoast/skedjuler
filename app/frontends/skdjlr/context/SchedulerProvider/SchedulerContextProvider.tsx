@@ -21,21 +21,15 @@ export default function SchedulerContextProvider({
   const [weekIndex, setWeekIndex] = useState(dayjs().week());
   const [dayScheduleStarts, setDayScheduleStarts] = useState(4);
   const [daySelected, setDaySelected] = useState(dayjs());
-  const [defaultShiftStartHour, setDefaultShiftStartHour] = useState(12);
-  const [defaultShiftEndHour, setDefaultShiftEndHour] = useState(15);
+  const [defaultShiftStart, setDefaultShiftStart] = useState("11:00");
+  const [defaultShiftEnd, setDefaultShiftEnd] = useState("15:00");
   const [shiftTemplates, setShiftTemplates] = useState<ShiftTemplate[]>([
     {
       id: "018ed485-4b4f-7c8f-aeee-ff631b8f97b9",
       name: "No Shift Templates Created",
       roleID: "018ed485-f042-7d1e-aaf4-9f580586c1d8",
-      startTime: {
-        hour: 12,
-        minute: 0,
-      },
-      endTime: {
-        hour: 3,
-        minute: 0,
-      },
+      start: "12:00",
+      end: "03:00",
       bgColor: "blue",
     },
   ]);
@@ -45,14 +39,14 @@ export default function SchedulerContextProvider({
         weekIndex,
         dayScheduleStarts,
         daySelected,
-        defaultShiftStartHour,
-        defaultShiftEndHour,
+        defaultShiftStart,
+        defaultShiftEnd,
         shiftTemplates,
-        setDefaultShiftEndHour,
+        setDefaultShiftEnd,
         setWeekIndex,
         setDayScheduleStarts,
         setDaySelected,
-        setDefaultShiftStartHour,
+        setDefaultShiftStart,
         setShiftTemplates,
       }}
     >

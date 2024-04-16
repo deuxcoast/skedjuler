@@ -1,5 +1,5 @@
 import { DAYS_IN_A_WEEK } from "@/types/WeekDay";
-import { ShiftTime } from "@/types/global";
+import { THourMinutePeriodTuple, THourMinuteTime } from "@/types/global";
 import dayjs from "dayjs";
 
 /**
@@ -39,13 +39,59 @@ export function getWeek(dayScheduleStarts: number, week = dayjs().week()) {
 /** A small helper function that returns the shiftTemplate time as a formatted
  * string using the Dayjs format string syntax.
  *
- * @param shiftTime - An objecting representing time in hours and minutes
+ * @param shiftTime - A string in the format of "HH:mm"
  * @param formatString - A format string to feed into the Dayjs format function
  */
 export function formatShiftTemplateTime(
-  shiftTime: ShiftTime,
+  shiftTime: THourMinuteTime,
   formatString: string,
 ): string {
-  const time = dayjs().hour(shiftTime.hour).minute(shiftTime.minute);
+  const [hour, minute] = parseShiftTimeString(shiftTime);
+  const time = dayjs().hour(hour).minute(minute);
   return time.format(formatString);
+}
+
+/** Parse a string in the form of HH:mm into an array representing the hour (0 -23)
+ * and minute of the time.
+ *
+ * @param shiftTime - A string in the form of "HH:mm"
+ * @returns An array of numbers in the form of `[HH, mm]`.
+ */
+export function parseShiftTimeString(shiftTime: THourMinuteTime): number[] {
+  const time = shiftTime.split(":");
+  return [Number(time[0]), Number(time[1])];
+}
+
+/** Parse a string in the form of HH:mm into an array representing the hour (1 -12),
+ * minute and AM/PM of the time.
+ *
+ * @param shiftTime - A string in the form of "HH:mm"
+ * @returns An array in the form of `[h, mm, A]`, where h and mm are numbers and
+ * A is a string (either "AM" or "PM").
+ */
+export function parseShiftTimeIntoTwelveHour(
+  shiftTime: THourMinuteTime,
+): THourMinutePeriodTuple {
+  const [hour, minute] = parseShiftTimeString(shiftTime);
+  const time = dayjs().hour(hour).minute(minute);
+  const [twelveHour, min] = time.format("h:mm").split(":");
+  const period = time.format("A");
+  return [Number(twelveHour), Number(min), period];
+}
+
+/** Represent two shifts as a string in the form of "h:mm a - h:mm a".
+ *
+ *
+ * @param startShiftTime - A string in the form of "HH:mm"
+ * @param endShiftTime - A string in the form of "HH:mm"
+ * @returns A string representing the range between startShiftTime and
+ * endShiftTime.
+ */
+export function formatShiftTimeStartToEnd(
+  startShiftTime: THourMinuteTime,
+  endShiftTime: THourMinuteTime,
+): string {
+  const startString = formatShiftTemplateTime(startShiftTime, "h:mm a");
+  const endString = formatShiftTemplateTime(endShiftTime, "h:mm a");
+  return startString.concat(" - ", endString);
 }
