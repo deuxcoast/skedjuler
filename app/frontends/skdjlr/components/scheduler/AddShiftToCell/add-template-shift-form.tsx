@@ -86,9 +86,7 @@ export default function AddTemplateShiftForm({
 
         const [endHour, endMin, endAMPM] = parseShiftTimeIntoTwelveHour(end);
 
-        console.log("Parsed Time:", startHour, startMin, startAMPM);
-
-        // update form values
+        // Update form values.
         if (!isNaN(startHour) && !isNaN(startMin)) {
           form.setValue("startHour", startHour, { shouldValidate: true });
           form.setValue("startMin", startMin, { shouldValidate: true });
