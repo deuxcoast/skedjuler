@@ -6,19 +6,40 @@ import { SampleData } from "@/sample-data/lmno";
 import { useEffect, useState } from "react";
 
 export default function SchedulerPage() {
-  const { dayScheduleStarts, weekIndex, setShiftTemplates } = useScheduler();
+  const {
+    dayScheduleStarts,
+    weekIndex,
+    employees,
+    schedules,
+    setShiftTemplates,
+    setEmployees,
+    setSchedules,
+  } = useScheduler();
   const [currentWeek, setCurrentWeek] = useState(getWeek(dayScheduleStarts));
   const employeeData = SampleData.employees;
   const shiftTemplateData = SampleData.shiftTemplates;
+  const schedulesData = SampleData.schedules;
 
   useEffect(() => {
     const week = getWeek(dayScheduleStarts, weekIndex);
     setCurrentWeek(week);
     setShiftTemplates(shiftTemplateData);
-  }, [dayScheduleStarts, weekIndex, setShiftTemplates, shiftTemplateData]);
+    setEmployees(employeeData);
+    setSchedules(schedulesData);
+  }, [
+    schedules,
+    dayScheduleStarts,
+    weekIndex,
+    setShiftTemplates,
+    setEmployees,
+    setSchedules,
+    shiftTemplateData,
+    employeeData,
+    schedulesData,
+  ]);
   return (
-    <div className="m-4">
-      <WeekGrid week={currentWeek} employeeData={employeeData} />
+    <div className="m-4 basis-full">
+      <WeekGrid week={currentWeek} employeeData={employees} />
     </div>
   );
 }

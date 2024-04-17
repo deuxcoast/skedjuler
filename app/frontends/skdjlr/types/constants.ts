@@ -1,0 +1,9 @@
+import { UUID } from "crypto";
+
+const INIT_WEEKLY_SCHEDULE_ID: UUID = "018ee81b-a46a-7fe8-afbe-9ca170165e81";
+
+const INIT_SCHEDULE_ID: UUID = "018ee81c-5ad7-7274-8870-e1bcaf7bd14c";
+
+const INIT_ROLE_ID: UUID = "018ee854-cf28-74a7-8e58-867665e5be3b";
+
+export { INIT_WEEKLY_SCHEDULE_ID, INIT_SCHEDULE_ID, INIT_ROLE_ID };

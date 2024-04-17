@@ -5,6 +5,7 @@ import {
   ShiftTemplate,
   Shift,
   DAY_OF_WEEK,
+  Schedule,
 } from "@/types/global";
 
 type TestData = {
@@ -13,6 +14,7 @@ type TestData = {
   employees: Employee[];
   shiftTemplates: ShiftTemplate[];
   scheduledShifts: Shift[];
+  schedules: Schedule[];
 };
 
 const SampleData: TestData = {
@@ -30,6 +32,22 @@ const SampleData: TestData = {
     {
       id: "018ecb4a-9d82-7e84-96fc-e3ad273e241f",
       name: "Food Runner",
+    },
+    {
+      id: "018ee82b-84f7-70c9-af4c-30031414efb3",
+      name: "Busser",
+    },
+  ],
+  schedules: [
+    {
+      id: "018ee82b-03a1-734e-a070-ce64a1b19bb4",
+      name: "Servers",
+      roles: ["018ecb4a-616b-7a46-b9d6-b2f39741083f"],
+    },
+    {
+      id: "018ee82b-30f0-7ee4-a543-3bf05b73519d",
+      name: "Food Runners",
+      roles: ["018ecb4a-9d82-7e84-96fc-e3ad273e241f"],
     },
   ],
   employees: [
@@ -80,6 +98,30 @@ const SampleData: TestData = {
       rolesID: ["018ecb4a-616b-7a46-b9d6-b2f39741083f"],
       phoneNumber: "2672907316",
       email: "starrsarg12@gmail.com",
+    },
+    {
+      id: "018ee8a2-4e52-7efb-8ed1-991525c0d559",
+      firstName: "Brendan",
+      lastName: "Guzman",
+      rolesID: ["018ecb4a-616b-7a46-b9d6-b2f39741083f"],
+      phoneNumber: "6094580220",
+      email: "bguzman929@gmail.com",
+    },
+    {
+      id: "018ee8a4-b186-77fb-9a04-c2e59a564f92",
+      firstName: "Brett",
+      lastName: "Langley",
+      rolesID: ["018ecb4a-9d82-7e84-96fc-e3ad273e241f"],
+      phoneNumber: "6093638695",
+      email: "brettthejet@hotmail.com",
+    },
+    {
+      id: "018ee8a6-f246-7ad8-8ec9-911c2e58c9b4",
+      firstName: "Harley",
+      lastName: "Sacramento",
+      rolesID: ["018ecb4a-9d82-7e84-96fc-e3ad273e241f"],
+      phoneNumber: "6098795841",
+      email: "harley.sac@gmail.com",
     },
   ],
   shiftTemplates: [

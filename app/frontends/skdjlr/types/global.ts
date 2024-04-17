@@ -1,4 +1,5 @@
 import { UUID } from "crypto";
+import { Dayjs } from "dayjs";
 
 export type SchedulerRow = {
   /*
@@ -63,11 +64,20 @@ export type Business = {
   industry: string;
   /*
    * What is day of the week do schedules for this business begin on?
+   * TODO: Should this information be stored at the Schedule level?
    */
   startOfWorkWeek: DayOfWeek;
   // address information
 };
 
+/** A Schedule represents a user created schedule. Schedules have names and
+ * roles associated with them.
+ *
+ * Each Schedule has a one-to-many relationship with WeeklySchedule objects.
+ *
+ * The Schedule type does not contain shift information - that is stored in
+ * WeeklySchedule.
+ */
 export type Schedule = {
   id: UUID;
   /*
@@ -79,6 +89,15 @@ export type Schedule = {
    * which employees are eligible for this schedule.
    */
   roles: UUID[];
+};
+
+export type WeeklySchedule = {
+  id: UUID;
+  /*
+   * The parent schedule which this WeeklySchedule belongs to.
+   */
+  scheduleID: UUID;
+  start: Dayjs;
 };
 
 export type Role = {
@@ -124,11 +143,12 @@ export type ShiftTemplate = {
 };
 
 export type Shift = {
-  id: UUID;
+  id: UUID | "";
+  clientID: UUID;
   employeeID: string;
   scheduleID: string;
-  start: Date;
-  end: Date;
-  bgColor: string;
+  start: Dayjs;
+  end: Dayjs;
+  // bgColor: string;
   published: boolean;
 };
