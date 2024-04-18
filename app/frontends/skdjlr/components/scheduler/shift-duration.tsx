@@ -1,4 +1,4 @@
-import { formatShiftTime } from "@/lib/utils";
+import { formatShiftTime } from "@/utils/reusable-functions";
 
 interface ShiftDurationProps {
   duration: {

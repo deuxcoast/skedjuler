@@ -12,7 +12,7 @@ import {
 } from "@radix-ui/react-icons";
 import { useTheme } from "next-themes";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/reusable-functions";
 import {
   CommandDialog,
   CommandEmpty,

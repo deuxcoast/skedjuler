@@ -2,6 +2,15 @@ import { DAYS_IN_A_WEEK } from "@/types/WeekDay";
 import { THourMinutePeriodTuple, THourMinuteTime } from "@/types/global";
 import dayjs from "dayjs";
 
+import weekOfYear from "dayjs/plugin/weekOfYear";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import advancedFormat from "dayjs/plugin/advancedFormat";
+
+dayjs.extend(weekOfYear);
+dayjs.extend(timezone);
+dayjs.extend(utc);
+dayjs.extend(advancedFormat);
 /**
  * Returns an array of Dayjs date objects for a given week in the year.
  *
@@ -10,8 +19,8 @@ import dayjs from "dayjs";
  *
  * @param week - The week of the year for which the function will return the
  * dates, represented as a number 1-52
- * @returns An array of length 7 containing Dayjs Date objects representing the
- * desired week.
+ * @returns An array of length 7 containing ISO Strings representing the days
+ * in the desired week.
  *
  */
 export function getWeek(dayScheduleStarts: number, week = dayjs().week()) {
@@ -31,7 +40,9 @@ export function getWeek(dayScheduleStarts: number, week = dayjs().week()) {
 
   const weekDates = new Array(DAYS_IN_A_WEEK)
     .fill(null)
-    .map(() => dayjs(new Date(year, firstDayOfWeek.month(), dayCount++)));
+    .map(() =>
+      dayjs(new Date(year, firstDayOfWeek.month(), dayCount++)).toISOString(),
+    );
 
   return weekDates;
 }

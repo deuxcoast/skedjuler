@@ -22,7 +22,7 @@ import {
 import {
   formatShiftTimeStartToEnd,
   parseShiftTimeIntoTwelveHour,
-} from "@/lib/date-utils";
+} from "@/utils/dates";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
@@ -30,6 +30,9 @@ import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { CaretDownIcon, CaretUpIcon } from "@radix-ui/react-icons";
 import { CollapsibleContent } from "@radix-ui/react-collapsible";
+import { randomUUID } from "crypto";
+import { Shift } from "@/types/global";
+import dayjs from "dayjs";
 
 const addTemplateShiftFormSchema = z.object({
   shiftTemplateID: z.string().uuid(),
@@ -48,7 +51,7 @@ export default function AddTemplateShiftForm({
   employee,
   day,
 }: AddTemplateShiftFormProps) {
-  const { shiftTemplates } = useScheduler();
+  const { shiftTemplates, dispatchShift } = useScheduler();
 
   const [isEditShiftOpen, setIsEditShiftOpen] = useState(false);
 
@@ -70,7 +73,6 @@ export default function AddTemplateShiftForm({
   });
 
   const shiftTemplateSelected = form.watch("shiftTemplateID");
-  console.log("shiftTemplateSelected", shiftTemplateSelected);
 
   // Set default values when shiftTemplateID changes
   useEffect(() => {
@@ -79,7 +81,6 @@ export default function AddTemplateShiftForm({
         (template) => template.id === shiftTemplateSelected,
       );
       if (selectedTemplate) {
-        console.log("Selected Template Data:", selectedTemplate);
         const { start, end } = selectedTemplate;
         const [startHour, startMin, startAMPM] =
           parseShiftTimeIntoTwelveHour(start);
@@ -87,15 +88,12 @@ export default function AddTemplateShiftForm({
         const [endHour, endMin, endAMPM] = parseShiftTimeIntoTwelveHour(end);
 
         // Update form values.
-        if (!isNaN(startHour) && !isNaN(startMin)) {
-          form.setValue("startHour", startHour, { shouldValidate: true });
-          form.setValue("startMin", startMin, { shouldValidate: true });
-          form.setValue("startAMPM", startAMPM, { shouldValidate: true });
-          form.setValue("endHour", endHour, { shouldValidate: true });
-          form.setValue("endMin", endMin, { shouldValidate: true });
-          form.setValue("endAMPM", endAMPM, { shouldValidate: true });
-        } else {
-        }
+        form.setValue("startHour", startHour, { shouldValidate: true });
+        form.setValue("startMin", startMin, { shouldValidate: true });
+        form.setValue("startAMPM", startAMPM, { shouldValidate: true });
+        form.setValue("endHour", endHour, { shouldValidate: true });
+        form.setValue("endMin", endMin, { shouldValidate: true });
+        form.setValue("endAMPM", endAMPM, { shouldValidate: true });
       }
     }
   }, [shiftTemplateSelected, shiftTemplates, form]);
@@ -103,17 +101,14 @@ export default function AddTemplateShiftForm({
   // The value from the select component for hours and minutes is initially a
   // string, but must be converted back into a number for form validation.
   const handleSelectChangeNumber = (name, value: number | string) => {
-    // convert string value to number before setting it
-    // TODO: look up how to handle this type of switch case where we take different
-    // actions based on the type selected, and how to type the function signature
-    // correctly
     if (value) {
       switch (typeof value) {
+        // convert string value to number before setting it
         case "string":
-          form.setValue(name, value);
+          form.setValue(name, parseInt(value, 10));
           break;
         case "number":
-          form.setValue(name, parseInt(value, 10));
+          form.setValue(name, value);
           break;
       }
     }
@@ -121,6 +116,24 @@ export default function AddTemplateShiftForm({
 
   function onSubmitShiftTemplate(data: AddTemplateShiftFormValues) {
     console.log("Shift template submitted", data);
+    const startDate = dayjs(); // TODO: generate
+    const endDate = dayjs(); // TODO: generate
+
+    // TODO: figure out how to handle temporary id's for client-generated
+    // objects, that will then receive new official id's when persisted to the
+    // database. We don't want to be blocking while sending data to the backend
+    // so we immediately approve Shift creation before sending a request to the
+    // backend, and then update the id when we receive a response from the
+    // server.
+    const scheduledShift: Shift = {
+      id: "",
+      clientID: randomUUID(),
+      employeeID: employee.id,
+      scheduleID: "XXX", // TODO:
+      start: startDate,
+      end: endDate,
+      published: false,
+    };
   }
 
   return (

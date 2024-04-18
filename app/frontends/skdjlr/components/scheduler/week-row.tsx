@@ -1,11 +1,11 @@
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import DayCell from "./day-cell";
 import EmployeeCell from "./employee-cell";
 import { Employee } from "@/types/global";
 
 type WeekRowProps = {
   employee: Employee;
-  week: Dayjs[];
+  week: string[];
 };
 
 export default function WeekRow({ week, employee }: WeekRowProps) {
@@ -13,7 +13,7 @@ export default function WeekRow({ week, employee }: WeekRowProps) {
     <>
       <EmployeeCell employee={employee} />
       {week.map((day) => (
-        <DayCell key={day.date()} day={day} employee={employee} />
+        <DayCell key={day} day={dayjs(day)} employee={employee} />
       ))}
     </>
   );

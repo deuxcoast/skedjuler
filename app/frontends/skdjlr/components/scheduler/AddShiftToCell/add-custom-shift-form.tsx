@@ -1,15 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-// import { DevTool } from "@hookform/devtools";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField } from "@/components/ui/form";
 import { AddShiftFormProps as AddCustomShiftFormProps } from "./types";
 import { useScheduler } from "@/context/SchedulerProvider/SchedulerContextProvider";
 import {
@@ -19,17 +12,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  formatShiftTimeStartToEnd,
-  parseShiftTimeIntoTwelveHour,
-} from "@/lib/date-utils";
+import { parseShiftTimeIntoTwelveHour } from "@/utils/dates";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { CaretDownIcon, CaretUpIcon } from "@radix-ui/react-icons";
-import { CollapsibleContent } from "@radix-ui/react-collapsible";
 
 const addCustomShiftSchema = z.object({
   shiftTemplateID: z.string().uuid(),
@@ -60,7 +45,7 @@ export default function AddCustomShiftForm({
   const defaultValues: Partial<AddCustomShiftFormValues> = {
     shiftTemplateID: "",
     startHour: defaultStartHour,
-    startMin: defaultEndMinute,
+    startMin: defaultStartMinute,
     startAMPM: defaultStartAMPM,
     endHour: defaultEndHour,
     endMin: defaultEndMinute,
@@ -77,17 +62,14 @@ export default function AddCustomShiftForm({
   // The value from the select component for hours and minutes is initially a
   // string, but must be converted back into a number for form validation.
   const handleSelectChangeNumber = (name, value: number | string) => {
-    // convert string value to number before setting it
-    // TODO: look up how to handle this type of switch case where we take different
-    // actions based on the type selected, and how to type the function signature
-    // correctly
     if (value) {
       switch (typeof value) {
+        // convert string value to number before setting it
         case "string":
-          form.setValue(name, value);
+          form.setValue(name, parseInt(value, 10));
           break;
         case "number":
-          form.setValue(name, parseInt(value, 10));
+          form.setValue(name, value);
           break;
       }
     }

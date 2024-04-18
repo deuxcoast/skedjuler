@@ -1,7 +1,7 @@
 "use client";
 import WeekGrid from "@/components/scheduler/week-grid";
 import { useScheduler } from "@/context/SchedulerProvider/SchedulerContextProvider";
-import { getWeek } from "@/lib/date-utils";
+import { getWeek } from "@/utils/dates";
 import { SampleData } from "@/sample-data/lmno";
 import { useEffect, useState } from "react";
 

@@ -3,10 +3,7 @@
 import { ReactNode, useContext, useEffect, useReducer, useState } from "react";
 import SchedulerContext from "./SchedulerContext";
 import dayjs from "dayjs";
-import weekOfYear from "dayjs/plugin/weekOfYear";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
-import advancedFormat from "dayjs/plugin/advancedFormat";
+
 import {
   Employee,
   Schedule,
@@ -14,11 +11,6 @@ import {
   THourMinuteTime,
 } from "@/types/global";
 import { ScheduledShiftReducer } from "./ScheduledShiftsReducer";
-
-dayjs.extend(weekOfYear);
-dayjs.extend(timezone);
-dayjs.extend(utc);
-dayjs.extend(advancedFormat);
 
 function initScheduledShifts() {
   if (typeof window !== "undefined") {

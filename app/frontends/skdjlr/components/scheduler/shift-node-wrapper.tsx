@@ -1,7 +1,5 @@
 import * as React from "react";
-import { cn } from "@/lib/utils";
-
-import { Card, CardContent, CardFooter } from "../ui/card";
+import { cn } from "@/utils/reusable-functions";
 
 // TODO: Determine how to handle background colors for shift nodes
 const ShiftNodeCard = React.forwardRef<

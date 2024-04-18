@@ -3,29 +3,44 @@ import { useScheduler } from "@/context/SchedulerProvider/SchedulerContextProvid
 import dayjs, { Dayjs } from "dayjs";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import SchedulerSelector from "../ScheduleSelector";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import {
+  decrementWeek,
+  incrementWeek,
+  resetCalendarToToday,
+  selectCurrentWeek,
+  selectWeekIndex,
+} from "@/lib/features/calendar/calendarSlice";
 
 type DayCellProps = {
-  week: Dayjs[];
+  week: string[];
 };
 
-export default function SchedulerControlBar({ week }: DayCellProps) {
-  const { weekIndex, setWeekIndex } = useScheduler();
+export default function SchedulerControlBar() {
+  // const { weekIndex, setWeekIndex } = useScheduler();
+  const week = useAppSelector(selectCurrentWeek);
+
+  const weekIndex = useAppSelector(selectWeekIndex);
+  const dispatch = useAppDispatch();
 
   // If the first and last day of the week are not in the same month then we will
   // conditionally render the name of the month twice, other wise just once
   // e.g. `April 7th - 13th` vs. `April 28th - May 4th`
-  const firstDay = week[0];
-  const lastDay = week[6];
+  const firstDay = dayjs(week[0]);
+  const lastDay = dayjs(week[6]);
 
   function handlePrevWeek() {
-    setWeekIndex(weekIndex - 1);
+    // setWeekIndex(weekIndex - 1);
+    dispatch(decrementWeek());
   }
 
   function handleNextWeek() {
-    setWeekIndex(weekIndex + 1);
+    // setWeekIndex(weekIndex + 1);
+    dispatch(incrementWeek());
   }
   function handleToday() {
-    setWeekIndex(dayjs().week());
+    // setWeekIndex(dayjs().week());
+    dispatch(resetCalendarToToday());
   }
 
   return (

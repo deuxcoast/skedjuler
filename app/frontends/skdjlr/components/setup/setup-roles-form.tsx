@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/reusable-functions";
 import {
   Select,
   SelectItem,
@@ -24,8 +24,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-
-const dummyScheduleData = ["Servers", "Food Runners", "Bussers"];
 
 const setupRolesFormSchema = z.object({
   sameAsSchedules: z.boolean().default(false).optional(),
@@ -142,7 +140,6 @@ export default function SetupRolesForm() {
             className="mt-2"
             onClick={() => {
               append({ role: "", schedule: "" });
-              // append({ schedule: "" });
             }}
           >
             Add More Roles

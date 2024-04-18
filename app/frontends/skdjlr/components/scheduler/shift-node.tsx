@@ -1,5 +1,4 @@
 import { Badge } from "../ui/badge";
-import { Card, CardContent, CardFooter } from "../ui/card";
 import ShiftDuration from "./shift-duration";
 import { ShiftNodeCard, ShiftNodeContent } from "./shift-node-wrapper";
 

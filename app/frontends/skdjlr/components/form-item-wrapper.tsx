@@ -3,7 +3,7 @@ import { Input } from "./ui/input";
 import { FormControl, FormItem, FormLabel, FormMessage } from "./ui/form";
 import { ControllerRenderProps, FieldPath, FieldValues } from "react-hook-form";
 import Link from "next/link";
-import { firstLetterUppercase } from "@/lib/utils";
+import { firstLetterUppercase } from "@/utils/reusable-functions";
 
 interface FormItemWrapperProps<
   TFieldValues extends FieldValues,

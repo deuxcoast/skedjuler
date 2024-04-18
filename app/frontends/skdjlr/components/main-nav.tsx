@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icons } from "./icons";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/reusable-functions";
 import { siteConfig } from "@/config/site";
 
 export function MainNav() {

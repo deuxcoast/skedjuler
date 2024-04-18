@@ -7,42 +7,28 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useScheduler } from "@/context/SchedulerProvider/SchedulerContextProvider";
-import { getEmployeesByRoles } from "@/lib/getEmployeesByRole";
-import { INIT_ROLE_ID, INIT_SCHEDULE_ID } from "@/types/constants";
+import {
+  selectSchedules,
+  selectSelectedScheduleIndex,
+  setCurrentlySelectedScheduleById,
+} from "@/lib/features/schedules/schedulesSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { UUID } from "crypto";
-import { ChevronsDown, Ellipsis } from "lucide-react";
+import { ChevronsDown } from "lucide-react";
 
 export default function SchedulerSelector() {
-  const {
-    employees,
-    schedules,
-    selectedSchedule,
-    setSelectedSchedule,
-    currentScheduleEmployees,
-    setCurrentScheduleEmployees,
-  } = useScheduler();
+  const selectedSchedule = useAppSelector(selectSelectedScheduleIndex);
+  const schedules = useAppSelector(selectSchedules);
 
-  let currentSchedule = schedules[selectedSchedule];
-  if (!currentSchedule) {
-    currentSchedule = {
-      id: INIT_SCHEDULE_ID,
-      name: "No Schedules",
-
-      roles: [INIT_ROLE_ID],
-    };
-  }
+  const dispatch = useAppDispatch();
+  const currentSchedule = schedules[selectedSchedule];
 
   const filterOutCurrentSchedule = () => {
     return schedules.filter((schedule) => schedule.id !== currentSchedule.id);
   };
 
-  // After updating the selectedSchedule here, the WeekGrid component will
-  // update the list of currentScheduleEmployees being passed down to the
-  // scheduler.
   const handleChangeSelectedSchedule = (scheduleID: UUID) => {
-    const index = schedules.findIndex((schedule) => schedule.id === scheduleID);
-    setSelectedSchedule(index);
+    dispatch(setCurrentlySelectedScheduleById(scheduleID));
   };
 
   return (

@@ -3,14 +3,6 @@ import ShiftNode from "./shift-node";
 import { AddShiftToCell } from "./AddShiftToCell";
 import { Employee } from "@/types/global";
 
-const startShift = new Date("January 1, 2024 15:45:00");
-const endShift = new Date("January 1, 2024 23:00:00");
-
-const shiftDuration = {
-  startDate: startShift,
-  endDate: endShift,
-};
-
 type DayCellProps = {
   day: Dayjs;
   employee: Employee;

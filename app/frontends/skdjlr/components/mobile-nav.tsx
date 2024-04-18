@@ -5,7 +5,7 @@ import Link, { LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
 
 import { siteConfig } from "@/config/site";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/reusable-functions";
 import { Icons } from "@/components/icons";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
