@@ -13,7 +13,6 @@ export default function ShiftNode({ shift }: ShiftNodeProps) {
   const roleName = useAppSelector((state) =>
     selectRoleNameByID(state, shift.roleID),
   );
-  console.log(roleName);
   return (
     <ShiftNodeCard className="">
       <ShiftNodeContent className="space-y-1">

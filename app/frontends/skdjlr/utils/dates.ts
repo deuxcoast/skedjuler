@@ -1,4 +1,4 @@
-import { DAYS_IN_A_WEEK } from "@/types/WeekDay";
+import { DAYS_IN_A_WEEK } from "@/types/constants";
 import { THourMinutePeriodTuple, THourMinuteTime } from "@/types/global";
 import dayjs from "dayjs";
 
