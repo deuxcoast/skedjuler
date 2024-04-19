@@ -1,8 +1,10 @@
 import { RootState } from "@/lib/store";
 import { SampleData } from "@/sample-data/lmno";
 import { Employee } from "@/types/global";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UUID } from "crypto";
+import { selectCurrentlySelectedSchedule } from "../schedules/schedulesSlice";
+import { getEmployeesByRoles } from "@/utils/getEmployeesByRole";
 
 const employeeData = SampleData.employees;
 
@@ -29,10 +31,22 @@ const employeesSlice = createSlice({
 
 export const { addEmployee, removeEmployeeByID } = employeesSlice.actions;
 
+export const selectEmployeeID = (state: RootState, employeeID: UUID) =>
+  employeeID;
+
 export const selectEmployees = (state: RootState) => state.employees.employees;
 
-// TODO: learn how to write selector functions that derive data
-export const selectCurrentScheduleEmployees = (state: RootState) =>
-  state.employees.employees;
+export const selectEmployeeByID = createSelector(
+  [selectEmployees, selectEmployeeID],
+  (employees, id) => employees.filter((employee) => employee.id === id),
+);
+
+export const selectCurrentScheduleEmployees = createSelector(
+  [selectEmployees, selectCurrentlySelectedSchedule],
+  (employees, currentSchedule) => {
+    const currentScheduleRoleIDs = currentSchedule.roles;
+    return getEmployeesByRoles(employees, currentScheduleRoleIDs);
+  },
+);
 
 export default employeesSlice.reducer;

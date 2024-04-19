@@ -1,9 +1,21 @@
 import { UUID } from "crypto";
 
-const INIT_WEEKLY_SCHEDULE_ID: UUID = "018ee81b-a46a-7fe8-afbe-9ca170165e81";
+const NULL_ID: UUID = "00000000-0000-0000-0000-000000000000";
 
-const INIT_SCHEDULE_ID: UUID = "018ee81c-5ad7-7274-8870-e1bcaf7bd14c";
+export const DAY_OF_WEEK = {
+  SUNDAY: 0,
+  MONDAY: 1,
+  TUESDAY: 2,
+  WEDNESDAY: 3,
+  THURSDAY: 4,
+  FRIDAY: 5,
+  SATURDAY: 6,
+} as const;
 
-const INIT_ROLE_ID: UUID = "018ee854-cf28-74a7-8e58-867665e5be3b";
+type ObjectValues<T> = T[keyof T];
 
-export { INIT_WEEKLY_SCHEDULE_ID, INIT_SCHEDULE_ID, INIT_ROLE_ID };
+export type DayOfWeek = ObjectValues<typeof DAY_OF_WEEK>;
+
+export const DAYS_IN_A_WEEK = 7;
+
+export { NULL_ID };

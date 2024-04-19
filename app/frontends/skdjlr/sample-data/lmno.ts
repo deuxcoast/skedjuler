@@ -4,13 +4,14 @@ import {
   Role,
   ShiftTemplate,
   Shift,
-  DAY_OF_WEEK,
   Schedule,
 } from "@/types/global";
 
+import { DAY_OF_WEEK } from "@/types/constants";
+
 type TestData = {
   business: Business;
-  rolesID: Role[];
+  roles: Role[];
   employees: Employee[];
   shiftTemplates: ShiftTemplate[];
   scheduledShifts: Shift[];
@@ -24,7 +25,7 @@ const SampleData: TestData = {
     industry: "Restaurant",
     startOfWorkWeek: DAY_OF_WEEK.MONDAY,
   },
-  rolesID: [
+  roles: [
     {
       id: "018ecb4a-616b-7a46-b9d6-b2f39741083f",
       name: "Server",
@@ -43,11 +44,15 @@ const SampleData: TestData = {
       id: "018ee82b-03a1-734e-a070-ce64a1b19bb4",
       name: "Servers",
       roles: ["018ecb4a-616b-7a46-b9d6-b2f39741083f"],
+      defaultShiftStart: "12:00",
+      defaultShiftEnd: "15:00",
     },
     {
       id: "018ee82b-30f0-7ee4-a543-3bf05b73519d",
       name: "Food Runners",
       roles: ["018ecb4a-9d82-7e84-96fc-e3ad273e241f"],
+      defaultShiftStart: "15:45",
+      defaultShiftEnd: "22:00",
     },
   ],
   employees: [

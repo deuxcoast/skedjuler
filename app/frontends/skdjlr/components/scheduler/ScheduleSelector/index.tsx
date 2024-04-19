@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   selectSchedules,
-  selectSelectedScheduleIndex,
+  selectCurrentlySelectedSchedule,
   setCurrentlySelectedScheduleById,
 } from "@/lib/features/schedules/schedulesSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
@@ -17,14 +17,13 @@ import { UUID } from "crypto";
 import { ChevronsDown } from "lucide-react";
 
 export default function SchedulerSelector() {
-  const selectedSchedule = useAppSelector(selectSelectedScheduleIndex);
+  const selectedSchedule = useAppSelector(selectCurrentlySelectedSchedule);
   const schedules = useAppSelector(selectSchedules);
 
   const dispatch = useAppDispatch();
-  const currentSchedule = schedules[selectedSchedule];
 
   const filterOutCurrentSchedule = () => {
-    return schedules.filter((schedule) => schedule.id !== currentSchedule.id);
+    return schedules.filter((schedule) => schedule.id !== selectedSchedule.id);
   };
 
   const handleChangeSelectedSchedule = (scheduleID: UUID) => {
@@ -33,7 +32,7 @@ export default function SchedulerSelector() {
 
   return (
     <div className="flex flex-row gap-2">
-      <div className="text-2xl font-semibold">{currentSchedule.name}</div>
+      <div className="text-2xl font-semibold">{selectedSchedule.name}</div>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

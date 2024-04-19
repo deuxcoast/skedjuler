@@ -1,6 +1,18 @@
 import { RootState } from "@/lib/store";
 import { getWeek } from "@/utils/dates";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import dayjs from "dayjs";
+import weekOfYear from "dayjs/plugin/weekOfYear";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import advancedFormat from "dayjs/plugin/advancedFormat";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(weekOfYear);
+dayjs.extend(timezone);
+dayjs.extend(utc);
+dayjs.extend(advancedFormat);
+dayjs.extend(customParseFormat);
 
 interface Calendar {
   weekIndex: number;
@@ -9,7 +21,7 @@ interface Calendar {
 }
 
 const initialCalendar: Calendar = {
-  weekIndex: 0,
+  weekIndex: dayjs().week(),
   dayScheduleStarts: 0,
   currentWeek: getWeek(0),
 };
@@ -20,15 +32,15 @@ const calendarSlice = createSlice({
   reducers: {
     incrementWeek: (state) => {
       state.weekIndex += 1;
-      state.currentWeek = getWeek(state.dayScheduleStarts, state.weekIndex + 1);
+      state.currentWeek = getWeek(state.dayScheduleStarts, state.weekIndex);
     },
     decrementWeek: (state) => {
       state.weekIndex -= 1;
-      state.currentWeek = getWeek(state.dayScheduleStarts, state.weekIndex + 1);
+      state.currentWeek = getWeek(state.dayScheduleStarts, state.weekIndex);
     },
     resetCalendarToToday: (state) => {
-      state.weekIndex = 0;
-      state.currentWeek = getWeek(0);
+      state.weekIndex = dayjs().week();
+      state.currentWeek = getWeek(state.dayScheduleStarts, state.weekIndex);
     },
     changeDayScheduleStarts: (state, action: PayloadAction<number>) => {
       state.dayScheduleStarts = action.payload;

@@ -1,36 +1,24 @@
+import { Shift } from "@/types/global";
 import { Badge } from "../ui/badge";
 import ShiftDuration from "./shift-duration";
 import { ShiftNodeCard, ShiftNodeContent } from "./shift-node-wrapper";
+import { useAppSelector } from "@/lib/hooks";
+import { selectRoleNameByID } from "@/lib/features/roles/rolesSlice";
 
-interface ShiftNodeProps {
-  /**
-   * What type of role will be worked this shift?
-   */
-  shiftRole: string;
-  /**
-   * Start and end time for shift.
-   */
-  duration: {
-    startDate: Date;
-    endDate: Date;
-  };
-  /**
-   * The published status of the shift, determines styling to alert user of
-   * unpublished revisions
-   */
-  published: boolean; // is this ShiftNode a draft or published
-}
+type ShiftNodeProps = {
+  shift: Shift;
+};
 
-export default function ShiftNode({
-  shiftRole,
-  duration,
-  published,
-}: ShiftNodeProps) {
+export default function ShiftNode({ shift }: ShiftNodeProps) {
+  const roleName = useAppSelector((state) =>
+    selectRoleNameByID(state, shift.roleID),
+  );
+  console.log(roleName);
   return (
     <ShiftNodeCard className="">
       <ShiftNodeContent className="space-y-1">
-        <Badge>{shiftRole}</Badge>
-        <ShiftDuration duration={duration} />
+        <Badge>{roleName}</Badge>
+        <ShiftDuration shift={shift} />
       </ShiftNodeContent>
     </ShiftNodeCard>
   );

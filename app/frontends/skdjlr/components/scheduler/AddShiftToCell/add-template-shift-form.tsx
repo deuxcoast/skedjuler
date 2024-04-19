@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-// import { DevTool } from "@hookform/devtools";
 
 import {
   Form,
@@ -11,7 +10,6 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { AddShiftFormProps as AddTemplateShiftFormProps } from "./types";
-import { useScheduler } from "@/context/SchedulerProvider/SchedulerContextProvider";
 import {
   Select,
   SelectContent,
@@ -22,6 +20,7 @@ import {
 import {
   formatShiftTimeStartToEnd,
   parseShiftTimeIntoTwelveHour,
+  parseTwelveHourIntoDayjs,
 } from "@/utils/dates";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -30,9 +29,16 @@ import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { CaretDownIcon, CaretUpIcon } from "@radix-ui/react-icons";
 import { CollapsibleContent } from "@radix-ui/react-collapsible";
-import { randomUUID } from "crypto";
+import { v4 as uuidv4 } from "uuid";
 import { Shift } from "@/types/global";
-import dayjs from "dayjs";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import {
+  addScheduledShift,
+  selectShiftTemplatesForCurrentSchedule,
+} from "@/lib/features/shifts/shiftsSlice";
+import { NULL_ID } from "@/types/constants";
+import { selectCurrentlySelectedSchedule } from "@/lib/features/schedules/schedulesSlice";
+import { UUID } from "crypto";
 
 const addTemplateShiftFormSchema = z.object({
   shiftTemplateID: z.string().uuid(),
@@ -51,8 +57,6 @@ export default function AddTemplateShiftForm({
   employee,
   day,
 }: AddTemplateShiftFormProps) {
-  const { shiftTemplates, dispatchShift } = useScheduler();
-
   const [isEditShiftOpen, setIsEditShiftOpen] = useState(false);
 
   const defaultValues: Partial<AddTemplateShiftFormValues> = {
@@ -72,12 +76,18 @@ export default function AddTemplateShiftForm({
     mode: "onChange",
   });
 
+  const dispatch = useAppDispatch();
+  const currentSchedule = useAppSelector(selectCurrentlySelectedSchedule);
+  const currentShiftTemplates = useAppSelector(
+    selectShiftTemplatesForCurrentSchedule,
+  );
+
   const shiftTemplateSelected = form.watch("shiftTemplateID");
 
   // Set default values when shiftTemplateID changes
   useEffect(() => {
     if (shiftTemplateSelected) {
-      const selectedTemplate = shiftTemplates.find(
+      const selectedTemplate = currentShiftTemplates.find(
         (template) => template.id === shiftTemplateSelected,
       );
       if (selectedTemplate) {
@@ -96,7 +106,7 @@ export default function AddTemplateShiftForm({
         form.setValue("endAMPM", endAMPM, { shouldValidate: true });
       }
     }
-  }, [shiftTemplateSelected, shiftTemplates, form]);
+  }, [shiftTemplateSelected, currentShiftTemplates, form]);
 
   // The value from the select component for hours and minutes is initially a
   // string, but must be converted back into a number for form validation.
@@ -115,25 +125,35 @@ export default function AddTemplateShiftForm({
   };
 
   function onSubmitShiftTemplate(data: AddTemplateShiftFormValues) {
-    console.log("Shift template submitted", data);
-    const startDate = dayjs(); // TODO: generate
-    const endDate = dayjs(); // TODO: generate
+    const startTime = parseTwelveHourIntoDayjs(
+      data.startHour,
+      data.startMin,
+      data.startAMPM,
+    );
+    const endTime = parseTwelveHourIntoDayjs(
+      data.endHour,
+      data.endMin,
+      data.endAMPM,
+    );
 
-    // TODO: figure out how to handle temporary id's for client-generated
-    // objects, that will then receive new official id's when persisted to the
-    // database. We don't want to be blocking while sending data to the backend
-    // so we immediately approve Shift creation before sending a request to the
-    // backend, and then update the id when we receive a response from the
-    // server.
+    const startDate = day.hour(startTime.hour()).minute(startTime.minute());
+    const endDate = day.hour(endTime.hour()).minute(startTime.minute());
+
+    let clientUUID = uuidv4() as UUID;
+
+    // TODO: reconcile temp clientID with id returned from server after persisting
+    // to the db
     const scheduledShift: Shift = {
-      id: "",
-      clientID: randomUUID(),
+      id: NULL_ID,
+      clientID: clientUUID,
       employeeID: employee.id,
-      scheduleID: "XXX", // TODO:
-      start: startDate,
-      end: endDate,
+      scheduleID: currentSchedule.id,
+      roleID: employee.rolesID[0], // TODO: Add logic for setting the role when there is multiple
+      start: startDate.toISOString(),
+      end: endDate.toISOString(),
       published: false,
     };
+    dispatch(addScheduledShift(scheduledShift));
   }
 
   return (
@@ -161,7 +181,7 @@ export default function AddTemplateShiftForm({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {shiftTemplates.map((template) => (
+                      {currentShiftTemplates.map((template) => (
                         <SelectItem key={template.id} value={template.id}>
                           <div className="flex w-[390px] px-2 py-4 flex-row justify-between items-center">
                             <div className="flex gap-2 font-semibold">
@@ -412,7 +432,6 @@ export default function AddTemplateShiftForm({
           <Button type="submit">Add Shift</Button>
         </form>
       </Form>
-      {/* <DevTool control={form.control} /> */}
     </>
   );
 }

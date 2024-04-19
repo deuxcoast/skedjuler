@@ -1,17 +1,17 @@
-import { formatShiftTime } from "@/utils/reusable-functions";
+import { Shift } from "@/types/global";
+import dayjs from "dayjs";
 
 interface ShiftDurationProps {
-  duration: {
-    startDate: Date;
-    endDate: Date;
-  };
+  shift: Shift;
 }
-export default function ShiftDuration({ duration }: ShiftDurationProps) {
+export default function ShiftDuration({ shift }: ShiftDurationProps) {
+  const startTime = dayjs(shift.start);
+  const endTime = dayjs(shift.end);
   return (
     <div className="text-xs">
-      {formatShiftTime(duration.startDate)}
+      {startTime.format("h:mm a")}
       {" - "}
-      {formatShiftTime(duration.endDate)}
+      {endTime.format("h:mm a")}
     </div>
   );
 }

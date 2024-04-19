@@ -1,7 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import calendarReducer from "./features/calendar/calendarSlice";
-import schedulesReducer from "./features/schedules/schedulesSlice";
-import employeesReducer from "./features/employees/employeesSlice";
+import calendarReducer from "@/lib/features/calendar/calendarSlice";
+import schedulesReducer from "@/lib/features/schedules/schedulesSlice";
+import employeesReducer from "@/lib/features/employees/employeesSlice";
+import shiftsReducer from "@/lib/features/shifts/shiftsSlice";
+import rolesReducer from "@/lib/features/roles/rolesSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -9,6 +11,8 @@ export const makeStore = () => {
       calendar: calendarReducer,
       schedules: schedulesReducer,
       employees: employeesReducer,
+      shifts: shiftsReducer,
+      roles: rolesReducer,
     },
   });
 };

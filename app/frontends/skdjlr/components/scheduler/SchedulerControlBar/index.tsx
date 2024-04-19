@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { useScheduler } from "@/context/SchedulerProvider/SchedulerContextProvider";
 import dayjs, { Dayjs } from "dayjs";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import SchedulerSelector from "../ScheduleSelector";
@@ -12,12 +11,7 @@ import {
   selectWeekIndex,
 } from "@/lib/features/calendar/calendarSlice";
 
-type DayCellProps = {
-  week: string[];
-};
-
 export default function SchedulerControlBar() {
-  // const { weekIndex, setWeekIndex } = useScheduler();
   const week = useAppSelector(selectCurrentWeek);
 
   const weekIndex = useAppSelector(selectWeekIndex);

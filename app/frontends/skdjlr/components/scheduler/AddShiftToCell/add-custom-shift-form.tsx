@@ -4,7 +4,6 @@ import { z } from "zod";
 
 import { Form, FormControl, FormField } from "@/components/ui/form";
 import { AddShiftFormProps as AddCustomShiftFormProps } from "./types";
-import { useScheduler } from "@/context/SchedulerProvider/SchedulerContextProvider";
 import {
   Select,
   SelectContent,
@@ -15,6 +14,8 @@ import {
 import { parseShiftTimeIntoTwelveHour } from "@/utils/dates";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { selectCurrentlySelectedSchedule } from "@/lib/features/schedules/schedulesSlice";
+import { useAppSelector } from "@/lib/hooks";
 
 const addCustomShiftSchema = z.object({
   shiftTemplateID: z.string().uuid(),
@@ -33,14 +34,13 @@ export default function AddCustomShiftForm({
   employee,
   day,
 }: AddCustomShiftFormProps) {
-  const { defaultShiftStart: defaultShiftStart, defaultShiftEnd } =
-    useScheduler();
+  const currentSchedule = useAppSelector(selectCurrentlySelectedSchedule);
 
   const [defaultStartHour, defaultStartMinute, defaultStartAMPM] =
-    parseShiftTimeIntoTwelveHour(defaultShiftStart);
+    parseShiftTimeIntoTwelveHour(currentSchedule.defaultShiftStart);
 
   const [defaultEndHour, defaultEndMinute, defaultEndAMPM] =
-    parseShiftTimeIntoTwelveHour(defaultShiftEnd);
+    parseShiftTimeIntoTwelveHour(currentSchedule.defaultShiftEnd);
 
   const defaultValues: Partial<AddCustomShiftFormValues> = {
     shiftTemplateID: "",

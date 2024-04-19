@@ -2,15 +2,15 @@ import { DAYS_IN_A_WEEK } from "@/types/WeekDay";
 import { THourMinutePeriodTuple, THourMinuteTime } from "@/types/global";
 import dayjs from "dayjs";
 
-import weekOfYear from "dayjs/plugin/weekOfYear";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
-import advancedFormat from "dayjs/plugin/advancedFormat";
-
-dayjs.extend(weekOfYear);
-dayjs.extend(timezone);
-dayjs.extend(utc);
-dayjs.extend(advancedFormat);
+// import weekOfYear from "dayjs/plugin/weekOfYear";
+// import timezone from "dayjs/plugin/timezone";
+// import utc from "dayjs/plugin/utc";
+// import advancedFormat from "dayjs/plugin/advancedFormat";
+//
+// dayjs.extend(weekOfYear);
+// dayjs.extend(timezone);
+// dayjs.extend(utc);
+// dayjs.extend(advancedFormat);
 /**
  * Returns an array of Dayjs date objects for a given week in the year.
  *
@@ -24,6 +24,7 @@ dayjs.extend(advancedFormat);
  *
  */
 export function getWeek(dayScheduleStarts: number, week = dayjs().week()) {
+  console.log("week:", week);
   const year = dayjs().year();
   const today = dayjs().day();
 
@@ -88,6 +89,15 @@ export function parseShiftTimeIntoTwelveHour(
   const [twelveHour, min] = time.format("h:mm").split(":");
   const period = time.format("A");
   return [Number(twelveHour), Number(min), period];
+}
+
+export function parseTwelveHourIntoDayjs(
+  hour: number,
+  minute: number,
+  ampm: string,
+) {
+  const time = hour.toString().concat(":", minute.toString(), " ", ampm);
+  return dayjs(time, "h:mm A");
 }
 
 /** Represent two shifts as a string in the form of "h:mm a - h:mm a".

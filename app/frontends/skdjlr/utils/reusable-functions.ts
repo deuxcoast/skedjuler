@@ -9,7 +9,3 @@ export function cn(...inputs: ClassValue[]) {
 export function firstLetterUppercase(name: string) {
   return name.charAt(0).toUpperCase() + name.slice(1);
 }
-
-export function formatShiftTime(date: Date): string {
-  return format(date, "h:mmaaaaa");
-}

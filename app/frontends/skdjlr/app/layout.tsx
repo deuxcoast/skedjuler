@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./global.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import SchedulerContextProvider from "@/context/SchedulerProvider/SchedulerContextProvider";
 import StoreProvider from "./StoreProvider";
 
 // const barlow = Barlow({
@@ -25,16 +24,14 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <StoreProvider>
-          <SchedulerContextProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              // disableTransitionOnChange
-            >
-              {children}
-            </ThemeProvider>
-          </SchedulerContextProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            // disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
         </StoreProvider>
       </body>
       {/* <body className={inter.className}>{children}</body> */}
