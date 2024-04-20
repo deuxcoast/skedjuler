@@ -2,6 +2,7 @@ import { RootState } from "@/lib/store";
 import { SampleData } from "@/sample-data/lmno";
 import { Shift, ShiftTemplate } from "@/types/global";
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { v4 as uuidv4 } from "uuid";
 import { UUID } from "crypto";
 import { selectCurrentlySelectedSchedule } from "../schedules/schedulesSlice";
 import dayjs, { Dayjs } from "dayjs";
@@ -23,11 +24,50 @@ const shiftsSlice = createSlice({
   name: "shifts",
   initialState,
   reducers: {
-    addScheduledShift: (state, action: PayloadAction<Shift>) => {
-      state.scheduledShifts.push(action.payload);
+    addScheduledShift: {
+      reducer(state, action: PayloadAction<Shift>) {
+        state.scheduledShifts.push(action.payload);
+      },
+      prepare(
+        id: UUID,
+        start: string,
+        end: string,
+        employeeID: UUID,
+        roleID: UUID,
+        scheduleID: UUID,
+        published: boolean,
+      ) {
+        return {
+          payload: {
+            clientID: uuidv4() as UUID,
+            id,
+            start,
+            end,
+            employeeID,
+            roleID,
+            scheduleID,
+            published,
+          },
+        };
+      },
     },
     removeScheduledShiftByID: (state, action: PayloadAction<UUID>) => {
       state.scheduledShifts.filter((shift) => shift.id !== action.payload);
+    },
+    updateScheduledShift: (state, action: PayloadAction<Shift>) => {
+      const { id, start, end, employeeID, scheduleID, clientID, published } =
+        action.payload;
+      const existingShift = state.scheduledShifts.find(
+        (shift) => shift.clientID === clientID,
+      );
+      if (existingShift) {
+        existingShift.id = id;
+        existingShift.employeeID = employeeID;
+        existingShift.scheduleID = scheduleID;
+        existingShift.start = start;
+        existingShift.end = end;
+        existingShift.published = published;
+      }
     },
     addShiftTemplate: (state, action: PayloadAction<ShiftTemplate>) => {
       state.shiftTemplates.push(action.payload);
@@ -70,7 +110,7 @@ type SelectorArgs = {
 
 export const selectShiftByID = createSelector(
   [selectShifts, selectShiftID],
-  (shifts, shiftID) => shifts.filter((shift) => shift.id === shiftID),
+  (shifts, shiftID) => shifts.find((shift) => shift.id === shiftID),
 );
 
 export const selectShiftsByEmployeeID = createSelector(

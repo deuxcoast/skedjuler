@@ -7,20 +7,16 @@ import {
 } from "@/components/ui/dialog";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { Plus } from "lucide-react";
-import { AddShiftToCellProps } from "./types";
 import { Separator } from "@radix-ui/react-separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AddCustomShiftForm from "./add-custom-shift-form";
 import AddTemplateShiftForm from "./add-template-shift-form";
+import { EmployeeDayChildrenProps } from "@/components/scheduler/types";
 
-export function AddShiftToCell(props: AddShiftToCellProps) {
+export function AddShiftToCell(props: EmployeeDayChildrenProps) {
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button size="icon" className="rounded-full h-4 w-4" variant="default">
-          <Plus />
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{props.children}</DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogTitle>Add Shift</DialogTitle>
         <DialogDescription>

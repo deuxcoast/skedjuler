@@ -9,7 +9,6 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-import { AddShiftFormProps as AddTemplateShiftFormProps } from "./types";
 import {
   Select,
   SelectContent,
@@ -29,7 +28,6 @@ import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { CaretDownIcon, CaretUpIcon } from "@radix-ui/react-icons";
 import { CollapsibleContent } from "@radix-ui/react-collapsible";
-import { v4 as uuidv4 } from "uuid";
 import { Shift } from "@/types/global";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import {
@@ -39,6 +37,8 @@ import {
 import { NULL_ID } from "@/types/constants";
 import { selectCurrentlySelectedSchedule } from "@/lib/features/schedules/schedulesSlice";
 import { UUID } from "crypto";
+import { DialogClose } from "@/components/ui/dialog";
+import { EmployeeDayProps } from "@/components/scheduler/types";
 
 const addTemplateShiftFormSchema = z.object({
   shiftTemplateID: z.string().uuid(),
@@ -56,7 +56,7 @@ type AddTemplateShiftFormValues = z.infer<typeof addTemplateShiftFormSchema>;
 export default function AddTemplateShiftForm({
   employee,
   day,
-}: AddTemplateShiftFormProps) {
+}: EmployeeDayProps) {
   const [isEditShiftOpen, setIsEditShiftOpen] = useState(false);
 
   const defaultValues: Partial<AddTemplateShiftFormValues> = {
@@ -139,13 +139,10 @@ export default function AddTemplateShiftForm({
     const startDate = day.hour(startTime.hour()).minute(startTime.minute());
     const endDate = day.hour(endTime.hour()).minute(startTime.minute());
 
-    let clientUUID = uuidv4() as UUID;
-
     // TODO: reconcile temp clientID with id returned from server after persisting
     // to the db
-    const scheduledShift: Shift = {
+    const scheduledShift = {
       id: NULL_ID,
-      clientID: clientUUID,
       employeeID: employee.id,
       scheduleID: currentSchedule.id,
       roleID: employee.rolesID[0], // TODO: Add logic for setting the role when there is multiple
@@ -153,9 +150,19 @@ export default function AddTemplateShiftForm({
       end: endDate.toISOString(),
       published: false,
     };
-    dispatch(addScheduledShift(scheduledShift));
+    // dispatch(addScheduledShift(id: NULL_ID, employeeID: employee.id, scheduleID: currentSchedule.id, roleID: employee.rolesID[0], start: startDate.toISOString(), end: endDate.toISOString(), published: false));
+    dispatch(
+      addScheduledShift(
+        scheduledShift.id,
+        scheduledShift.start,
+        scheduledShift.end,
+        scheduledShift.employeeID,
+        scheduledShift.roleID,
+        scheduledShift.scheduleID,
+        scheduledShift.published,
+      ),
+    );
   }
-
   return (
     <>
       <Form {...form}>
@@ -429,7 +436,11 @@ export default function AddTemplateShiftForm({
               </CollapsibleContent>
             </Collapsible>
           )}
-          <Button type="submit">Add Shift</Button>
+          <DialogClose asChild>
+            <Button disabled={!form.formState.isValid} type="submit">
+              Add Shift
+            </Button>
+          </DialogClose>
         </form>
       </Form>
     </>

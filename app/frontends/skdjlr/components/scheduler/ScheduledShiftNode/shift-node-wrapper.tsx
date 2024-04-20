@@ -21,7 +21,11 @@ const ShiftNodeContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("flex-col p-2", className)} {...props} />
+  <div
+    ref={ref}
+    className={cn("flex-col px-2 py-1 gap-0", className)}
+    {...props}
+  />
 ));
 ShiftNodeContent.displayName = "ShiftNodeContent";
 

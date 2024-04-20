@@ -1,7 +1,10 @@
 import { Shift } from "@/types/global";
-import { Badge } from "../ui/badge";
-import ShiftDuration from "./shift-duration";
-import { ShiftNodeCard, ShiftNodeContent } from "./shift-node-wrapper";
+import { Badge } from "@/components/ui/badge";
+import ShiftDuration from "@/components/scheduler/ScheduledShiftNode/shift-duration";
+import {
+  ShiftNodeCard,
+  ShiftNodeContent,
+} from "@/components/scheduler/ScheduledShiftNode/shift-node-wrapper";
 import { useAppSelector } from "@/lib/hooks";
 import { selectRoleNameByID } from "@/lib/features/roles/rolesSlice";
 
@@ -14,9 +17,9 @@ export default function ShiftNode({ shift }: ShiftNodeProps) {
     selectRoleNameByID(state, shift.roleID),
   );
   return (
-    <ShiftNodeCard className="">
+    <ShiftNodeCard>
       <ShiftNodeContent className="space-y-1">
-        <Badge>{roleName}</Badge>
+        <h4 className="text-xs font-semibold">{roleName}</h4>
         <ShiftDuration shift={shift} />
       </ShiftNodeContent>
     </ShiftNodeCard>

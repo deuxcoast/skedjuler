@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import SchedulerSelector from "../ScheduleSelector";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
@@ -8,13 +8,11 @@ import {
   incrementWeek,
   resetCalendarToToday,
   selectCurrentWeek,
-  selectWeekIndex,
 } from "@/lib/features/calendar/calendarSlice";
 
-export default function SchedulerControlBar() {
+export default function ControlBar() {
   const week = useAppSelector(selectCurrentWeek);
 
-  const weekIndex = useAppSelector(selectWeekIndex);
   const dispatch = useAppDispatch();
 
   // If the first and last day of the week are not in the same month then we will

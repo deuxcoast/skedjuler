@@ -1,9 +1,9 @@
-import dayjs, { Dayjs } from "dayjs";
-import SchedulerGridHeaderCell from "./schedule-grid-header-cell";
+import dayjs from "dayjs";
+import GridHeaderCell from "@/components/scheduler/GridHeaderCell";
 import { useAppSelector } from "@/lib/hooks";
 import { selectCurrentWeek } from "@/lib/features/calendar/calendarSlice";
 
-export default function SchedulerGridHeader() {
+export default function GridHeader() {
   const week = useAppSelector(selectCurrentWeek);
   return (
     <>
@@ -12,7 +12,7 @@ export default function SchedulerGridHeader() {
        * should be displayed here above the column of employees? */}
       <div></div>
       {week.map((day) => (
-        <SchedulerGridHeaderCell key={day} day={dayjs(day)} />
+        <GridHeaderCell key={day} day={dayjs(day)} />
       ))}
     </>
   );

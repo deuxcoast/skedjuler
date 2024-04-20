@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Form, FormControl, FormField } from "@/components/ui/form";
-import { AddShiftFormProps as AddCustomShiftFormProps } from "./types";
 import {
   Select,
   SelectContent,
@@ -16,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { selectCurrentlySelectedSchedule } from "@/lib/features/schedules/schedulesSlice";
 import { useAppSelector } from "@/lib/hooks";
+import { EmployeeDayProps } from "@/components/scheduler/types";
 
 const addCustomShiftSchema = z.object({
   shiftTemplateID: z.string().uuid(),
@@ -33,7 +33,7 @@ type AddCustomShiftFormValues = z.infer<typeof addCustomShiftSchema>;
 export default function AddCustomShiftForm({
   employee,
   day,
-}: AddCustomShiftFormProps) {
+}: EmployeeDayProps) {
   const currentSchedule = useAppSelector(selectCurrentlySelectedSchedule);
 
   const [defaultStartHour, defaultStartMinute, defaultStartAMPM] =

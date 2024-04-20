@@ -1,4 +1,4 @@
-import WeekGrid from "@/components/scheduler/week-grid";
+import WeekGrid from "@/components/scheduler/WeekGrid";
 
 export default function SchedulerPage() {
   return (

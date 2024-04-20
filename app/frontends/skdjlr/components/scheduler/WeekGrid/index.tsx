@@ -1,8 +1,8 @@
 "use client";
 
-import SchedulerGridHeader from "./SchedulerGridHeader";
-import WeekRow from "./week-row";
-import SchedulerControlBar from "./SchedulerControlBar";
+import GridHeader from "@/components/scheduler/GridHeader";
+import WeekRow from "@/components/scheduler/WeekRow";
+import ControlBar from "@/components/scheduler/ControlBar";
 import { useAppSelector } from "@/lib/hooks";
 import { selectCurrentWeek } from "@/lib/features/calendar/calendarSlice";
 import { selectCurrentScheduleEmployees } from "@/lib/features/employees/employeesSlice";
@@ -15,9 +15,9 @@ export default function WeekGrid() {
 
   return (
     <>
-      <SchedulerControlBar />
+      <ControlBar />
       <div className="grid grid-cols-8 grid-rows-calendar justify-items-stretch items-stretch">
-        <SchedulerGridHeader />
+        <GridHeader />
         {currentScheduleEmployees.map((employee) => (
           <WeekRow key={employee.id} week={week} employee={employee} />
         ))}
