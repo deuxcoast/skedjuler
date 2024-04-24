@@ -100,6 +100,21 @@ export function parseTwelveHourIntoDayjs(
   return dayjs(time, "h:mm A");
 }
 
+/** Takes a ISO string and returns an array in the form of [hh, mm]
+ * hour: 0-23
+ * minute: 0-59
+ *
+ * @param isoString - A string representing a timestamp in ISO 8601 format
+ */
+export function parseIsoIntoHourMin(
+  isoString: string,
+): [hour: number, minute: number] {
+  const day = dayjs(isoString);
+  const hour = day.hour();
+  const min = day.minute();
+  return [hour, min];
+}
+
 /** Represent two shifts as a string in the form of "h:mm a - h:mm a".
  *
  *

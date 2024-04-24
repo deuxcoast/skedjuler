@@ -151,7 +151,7 @@ export default function AddTemplateShiftForm({
       end: endDate.toISOString(),
       published: false,
     };
-    // dispatch(addScheduledShift(id: NULL_ID, employeeID: employee.id, scheduleID: currentSchedule.id, roleID: employee.rolesID[0], start: startDate.toISOString(), end: endDate.toISOString(), published: false));
+    console.log("scheduledShift:", scheduledShift);
     dispatch(
       addScheduledShift(
         scheduledShift.id,

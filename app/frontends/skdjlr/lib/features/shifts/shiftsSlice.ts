@@ -7,16 +7,25 @@ import { v4 as uuidv4 } from "uuid";
 import { UUID } from "crypto";
 import { selectCurrentlySelectedSchedule } from "../schedules/schedulesSlice";
 import dayjs from "dayjs";
+import { parseIsoIntoHourMin } from "@/utils/dates";
 
 const shiftTemplatesData = SampleData.shiftTemplates;
 // const scheduledShiftsData = SampleData.scheduledShifts;
 
 interface ShiftState {
+  isDragging: boolean;
   shiftTemplates: ShiftTemplate[];
   scheduledShifts: Shift[];
 }
 
+type DragPayload = {
+  destinationEmployeeID: UUID;
+  destinationDay: string;
+  shiftID: UUID;
+};
+
 const initialState: ShiftState = {
+  isDragging: false,
   shiftTemplates: shiftTemplatesData,
   scheduledShifts: [],
 };
@@ -70,6 +79,34 @@ const shiftsSlice = createSlice({
         existingShift.published = published;
       }
     },
+    scheduledShiftDragAndDrop: (state, action: PayloadAction<DragPayload>) => {
+      const { destinationDay, destinationEmployeeID, shiftID } = action.payload;
+      const existingShift = state.scheduledShifts.find(
+        (shift) => (shift.clientID = shiftID),
+      );
+
+      const destDayjs = dayjs(destinationDay);
+
+      if (existingShift) {
+        const [shiftStartHour, shiftStartMin] = parseIsoIntoHourMin(
+          existingShift.start,
+        );
+        const [shiftEndHour, shiftEndMin] = parseIsoIntoHourMin(
+          existingShift.end,
+        );
+
+        const newShiftStart = destDayjs
+          .hour(shiftStartHour)
+          .minute(shiftStartMin);
+
+        const newShiftEnd = destDayjs.hour(shiftEndHour).minute(shiftEndMin);
+
+        existingShift.employeeID = destinationEmployeeID;
+        existingShift.start = newShiftStart.toISOString();
+        existingShift.end = newShiftEnd.toISOString();
+        existingShift.clientID = uuidv4() as UUID;
+      }
+    },
     addShiftTemplate: (state, action: PayloadAction<ShiftTemplate>) => {
       state.shiftTemplates.push(action.payload);
     },
@@ -77,6 +114,12 @@ const shiftsSlice = createSlice({
       state.shiftTemplates.filter(
         (shiftTemplate) => shiftTemplate.id !== action.payload,
       );
+    },
+    isDragging: (state) => {
+      state.isDragging = true;
+    },
+    isNotDragging: (state) => {
+      state.isDragging = false;
     },
   },
 });
@@ -86,6 +129,9 @@ export const {
   removeScheduledShiftByID,
   addShiftTemplate,
   removeShiftTemplateByID,
+  scheduledShiftDragAndDrop,
+  isDragging,
+  isNotDragging,
 } = shiftsSlice.actions;
 
 export const selectShifts = (state: RootState) => state.shifts.scheduledShifts;

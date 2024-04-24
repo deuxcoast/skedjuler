@@ -34,7 +34,6 @@ export default function RootLayout({
           </ThemeProvider>
         </StoreProvider>
       </body>
-      {/* <body className={inter.className}>{children}</body> */}
     </html>
   );
 }
