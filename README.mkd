@@ -14,3 +14,10 @@
 
 4. Unless the Docker images have changed, we can run `make dev-compose-up`, to
    skip rebuilding the containers every time.
+
+# Database Schema
+
+## Notes on `shifts` table
+
+- We keep two different columns for `start_date` and `start_time` (as well as
+  their inverse, obviously). The reason for this is to enable recurring shifts.
