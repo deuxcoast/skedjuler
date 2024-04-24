@@ -1,14 +1,13 @@
 import { Employee } from "@/types/global";
-import { Dayjs } from "dayjs";
 
 export type EmployeeDayProps = {
   employee: Employee;
-  day: Dayjs;
+  day: string;
 };
 
 export type EmployeeDayChildrenProps = {
   employee: Employee;
-  day: Dayjs;
+  day: string;
   children: React.ReactNode;
 };
 

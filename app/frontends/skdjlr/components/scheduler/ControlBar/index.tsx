@@ -1,3 +1,10 @@
+// FIX: I'm unsure if this actually has to be a client component. I'm getting a
+// hydration error because the date rendered on the server doesn't match the
+// date rendered on the client. I think this has to do with the local time on
+// the server being different from the local time on the client, but not positive.
+// So I've just thrown 'use client' on here for the time being.
+"use client";
+
 import { Button } from "@/components/ui/button";
 import dayjs from "dayjs";
 import { ChevronLeft, ChevronRight } from "lucide-react";

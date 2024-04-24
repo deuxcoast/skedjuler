@@ -17,6 +17,7 @@ export default function WeekGrid() {
     <>
       <ControlBar />
       <div className="grid grid-cols-8 grid-rows-calendar justify-items-stretch items-stretch">
+        {/* <div className="flex flex-row m-auto justify-start items-stretch"> */}
         <GridHeader />
         {currentScheduleEmployees.map((employee) => (
           <WeekRow key={employee.id} week={week} employee={employee} />

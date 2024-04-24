@@ -28,7 +28,6 @@ import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { CaretDownIcon, CaretUpIcon } from "@radix-ui/react-icons";
 import { CollapsibleContent } from "@radix-ui/react-collapsible";
-import { Shift } from "@/types/global";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import {
   addScheduledShift,
@@ -36,9 +35,9 @@ import {
 } from "@/lib/features/shifts/shiftsSlice";
 import { NULL_ID } from "@/types/constants";
 import { selectCurrentlySelectedSchedule } from "@/lib/features/schedules/schedulesSlice";
-import { UUID } from "crypto";
 import { DialogClose } from "@/components/ui/dialog";
 import { EmployeeDayProps } from "@/components/scheduler/types";
+import dayjs from "dayjs";
 
 const addTemplateShiftFormSchema = z.object({
   shiftTemplateID: z.string().uuid(),
@@ -58,6 +57,8 @@ export default function AddTemplateShiftForm({
   day,
 }: EmployeeDayProps) {
   const [isEditShiftOpen, setIsEditShiftOpen] = useState(false);
+
+  const dayObj = dayjs(day);
 
   const defaultValues: Partial<AddTemplateShiftFormValues> = {
     shiftTemplateID: "",
@@ -136,8 +137,8 @@ export default function AddTemplateShiftForm({
       data.endAMPM,
     );
 
-    const startDate = day.hour(startTime.hour()).minute(startTime.minute());
-    const endDate = day.hour(endTime.hour()).minute(startTime.minute());
+    const startDate = dayObj.hour(startTime.hour()).minute(startTime.minute());
+    const endDate = dayObj.hour(endTime.hour()).minute(startTime.minute());
 
     // TODO: reconcile temp clientID with id returned from server after persisting
     // to the db

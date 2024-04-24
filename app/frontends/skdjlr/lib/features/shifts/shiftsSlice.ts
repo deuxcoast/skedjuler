@@ -2,10 +2,11 @@ import { RootState } from "@/lib/store";
 import { SampleData } from "@/sample-data/lmno";
 import { Shift, ShiftTemplate } from "@/types/global";
 import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createCachedSelector } from "re-reselect";
 import { v4 as uuidv4 } from "uuid";
 import { UUID } from "crypto";
 import { selectCurrentlySelectedSchedule } from "../schedules/schedulesSlice";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 
 const shiftTemplatesData = SampleData.shiftTemplates;
 // const scheduledShiftsData = SampleData.scheduledShifts;
@@ -89,41 +90,49 @@ export const {
 
 export const selectShifts = (state: RootState) => state.shifts.scheduledShifts;
 
-const selectShiftID = (state: RootState, shiftID: UUID) => shiftID;
-const selectDay = (state: RootState, args: SelectorArgs) => args.day;
-const selectEmployeeID = (state: RootState, args: SelectorArgs) =>
-  args.employeeID;
+const selectShiftID = (_: RootState, shiftID: UUID) => shiftID;
+const selectDay = (_: RootState, args: SelectorArgs) => args.dayISO;
+const selectEmployeeID = (_: RootState, args: SelectorArgs) => args.employeeID;
 
 export const selectShiftTemplates = (state: RootState) =>
   state.shifts.shiftTemplates;
 
 export const selectShiftsByDay = createSelector(
   [selectShifts, selectDay],
-  (shifts, day) =>
-    shifts.filter((shift: Shift) => day.isSame(shift.start, "day")),
+  (shifts, dayISO) => {
+    const day = dayjs(dayISO);
+    return shifts.filter((shift: Shift) => day.isSame(shift.start, "day"));
+  },
 );
 
 type SelectorArgs = {
   employeeID: UUID;
-  day: Dayjs;
+  dayISO: string;
 };
+// TODO: made a mess down here trying to cache the selector functions so they
+// will only run on an individual grid cell if a shift has been added for that
+// particular employee, but it's not working and i think each cell has to check
+//
 
 export const selectShiftByID = createSelector(
   [selectShifts, selectShiftID],
   (shifts, shiftID) => shifts.find((shift) => shift.id === shiftID),
 );
 
-export const selectShiftsByEmployeeID = createSelector(
+export const selectShiftsByEmployeeID = createCachedSelector(
   [selectShifts, selectEmployeeID],
-  (shifts, employeeID) =>
-    shifts.filter((shift) => shift.employeeID === employeeID),
-);
+  (shifts, employeeID) => {
+    return shifts.filter((shift) => shift.employeeID === employeeID);
+  },
+)((_, props) => props.employeeID);
 
-export const selectShiftsByEmployeeIDAndDay = createSelector(
+export const selectShiftsByEmployeeIDAndDay = createCachedSelector(
   [selectShiftsByEmployeeID, selectDay],
-  (shiftsByEmployee, day) =>
-    shiftsByEmployee.filter((shift) => day.isSame(shift.start, "day")),
-);
+  (shiftsByEmployee, dayISO) => {
+    const day = dayjs(dayISO);
+    return shiftsByEmployee.filter((shift) => day.isSame(shift.start, "day"));
+  },
+)((_, props) => `${props.employeeID}:${props.dayISO}`);
 
 export const selectShiftTemplatesForCurrentSchedule = createSelector(
   [selectShiftTemplates, selectCurrentlySelectedSchedule],

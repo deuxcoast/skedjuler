@@ -9,18 +9,14 @@ import { EmployeeDayProps } from "../types";
 export default function GridCell({ day, employee }: EmployeeDayProps) {
   const [hidden, setHidden] = useState(true);
 
+  // const dayISO = day.toISOString();
   const shifts = useAppSelector((state) =>
-    // TODO: make a factory function for this memoized selector function
-    // currently the cache size is 1, and is being shared across the entire
-    // grid - essentially useless for memoization.
-    // https://redux.js.org/usage/deriving-data-selectors#selector-factories
     selectShiftsByEmployeeIDAndDay(state, {
       employeeID: employee.id,
-      day: day,
+      dayISO: day,
     }),
   );
   const shiftsPresent = shifts.length > 0;
-
   const handleMouseEnter = () => {
     setHidden(false);
   };
