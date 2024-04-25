@@ -57,6 +57,7 @@ const SampleData: TestData = {
         name: "LMNO",
         industry: "Restaurant",
         startOfWorkWeek: DAY_OF_WEEK.MONDAY,
+        timezone: "America/New_York",
       },
     },
     allIds: ["018ecb4a-3ecb-7a62-93bb-652113934c2d"],

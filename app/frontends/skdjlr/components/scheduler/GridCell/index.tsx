@@ -1,4 +1,5 @@
 "use client";
+
 import ScheduledShiftNode from "@/components/scheduler/ScheduledShiftNode";
 import { useAppSelector } from "@/lib/hooks";
 import { selectShiftsByEmployeeIDAndDay } from "@/lib/features/shifts/shiftsSlice";
@@ -8,10 +9,13 @@ import { EmployeeDayProps } from "../types";
 import { Droppable } from "@hello-pangea/dnd";
 
 export default function GridCell({ day, employee }: EmployeeDayProps) {
+  // get date from ISO string with no time data to circumvent hydration related
+  // errors due to UTC time on server and local time on client
+  const date = day.substring(0, 10);
+
   const [hidden, setHidden] = useState(true);
   const isDragging = useAppSelector((state) => state.shifts.isDragging);
 
-  // const dayISO = day.toISOString();
   const shifts = useAppSelector((state) =>
     selectShiftsByEmployeeIDAndDay(state, {
       employeeID: employee.id,
@@ -29,7 +33,7 @@ export default function GridCell({ day, employee }: EmployeeDayProps) {
 
   return (
     // TODO: fix overlapping border in calendar grid
-    <Droppable droppableId={`${day}::${employee.id}`}>
+    <Droppable droppableId={`${date}::${employee.id}`}>
       {(provided) => (
         <div
           ref={provided.innerRef}

@@ -138,23 +138,19 @@ export default function AddTemplateShiftForm({
     );
 
     const startDate = dayObj.hour(startTime.hour()).minute(startTime.minute());
-    const endDate = dayObj.hour(endTime.hour()).minute(startTime.minute());
+    let endDate = dayObj.hour(endTime.hour()).minute(startTime.minute());
 
-    // TODO: reconcile temp clientID with id returned from server after persisting
-    // to the db
     const scheduledShift = {
-      id: NULL_ID,
       employeeID: employee.id,
       scheduleID: currentSchedule.id,
       roleID: employee.rolesID[0], // TODO: Add logic for setting the role when there is multiple
-      start: startDate.toISOString(),
-      end: endDate.toISOString(),
+      start: startDate.utc().toISOString(),
+      end: endDate.utc().toISOString(),
       published: false,
     };
     console.log("scheduledShift:", scheduledShift);
     dispatch(
       addScheduledShift(
-        scheduledShift.id,
         scheduledShift.start,
         scheduledShift.end,
         scheduledShift.employeeID,

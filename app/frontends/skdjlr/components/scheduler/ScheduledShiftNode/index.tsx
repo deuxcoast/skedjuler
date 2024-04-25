@@ -19,7 +19,7 @@ export default function ShiftNode({ shift, index }: ShiftNodeProps) {
     selectRoleNameByID(state, shift.roleID),
   );
   return (
-    <Draggable draggableId={shift.clientID} index={index}>
+    <Draggable draggableId={shift.id} index={index}>
       {(provided) => (
         <ShiftNodeCard
           {...provided.draggableProps}

@@ -2,15 +2,15 @@ import { DAYS_IN_A_WEEK } from "@/types/constants";
 import { THourMinutePeriodTuple, THourMinuteTime } from "@/types/global";
 import dayjs from "dayjs";
 
-// import weekOfYear from "dayjs/plugin/weekOfYear";
-// import timezone from "dayjs/plugin/timezone";
-// import utc from "dayjs/plugin/utc";
-// import advancedFormat from "dayjs/plugin/advancedFormat";
-//
-// dayjs.extend(weekOfYear);
-// dayjs.extend(timezone);
-// dayjs.extend(utc);
-// dayjs.extend(advancedFormat);
+import weekOfYear from "dayjs/plugin/weekOfYear";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import advancedFormat from "dayjs/plugin/advancedFormat";
+
+dayjs.extend(weekOfYear);
+dayjs.extend(timezone);
+dayjs.extend(utc);
+dayjs.extend(advancedFormat);
 /**
  * Returns an array of Dayjs date objects for a given week in the year.
  *
@@ -24,11 +24,11 @@ import dayjs from "dayjs";
  *
  */
 export function getWeek(dayScheduleStarts: number, week = dayjs().week()) {
-  console.log("week:", week);
   const year = dayjs().year();
   const today = dayjs().day();
 
-  let firstDayOfWeek = dayjs(new Date(year, 0, 0)).week(week);
+  let firstDayOfWeek = dayjs.utc().year(year).date(0).week(week).hour(0);
+
   const prevWeekDifferential = DAYS_IN_A_WEEK - dayScheduleStarts;
 
   if (dayScheduleStarts > 0 && dayScheduleStarts <= today) {
@@ -39,11 +39,14 @@ export function getWeek(dayScheduleStarts: number, week = dayjs().week()) {
 
   let dayCount = firstDayOfWeek.date();
 
-  const weekDates = new Array(DAYS_IN_A_WEEK)
-    .fill(null)
-    .map(() =>
-      dayjs(new Date(year, firstDayOfWeek.month(), dayCount++)).toISOString(),
-    );
+  const weekDates = new Array(DAYS_IN_A_WEEK).fill(null).map(() => {
+    const day = dayjs()
+      .year(year)
+      .month(firstDayOfWeek.month())
+      .date(dayCount++);
+    const dayISO = day.toISOString();
+    return dayISO;
+  });
 
   return weekDates;
 }

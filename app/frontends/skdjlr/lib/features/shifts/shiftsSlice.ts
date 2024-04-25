@@ -8,6 +8,7 @@ import { UUID } from "crypto";
 import { selectCurrentlySelectedSchedule } from "../schedules/schedulesSlice";
 import dayjs from "dayjs";
 import { parseIsoIntoHourMin } from "@/utils/dates";
+import { current } from "immer";
 
 const shiftTemplatesData = SampleData.shiftTemplates;
 // const scheduledShiftsData = SampleData.scheduledShifts;
@@ -36,10 +37,10 @@ const shiftsSlice = createSlice({
   reducers: {
     addScheduledShift: {
       reducer(state, action: PayloadAction<Shift>) {
+        console.log("addScheduledShift:", action.payload);
         state.scheduledShifts.push(action.payload);
       },
       prepare(
-        id: UUID,
         start: string,
         end: string,
         employeeID: UUID,
@@ -49,8 +50,7 @@ const shiftsSlice = createSlice({
       ) {
         return {
           payload: {
-            clientID: uuidv4() as UUID,
-            id,
+            id: uuidv4() as UUID,
             start,
             end,
             employeeID,
@@ -65,10 +65,10 @@ const shiftsSlice = createSlice({
       state.scheduledShifts.filter((shift) => shift.id !== action.payload);
     },
     updateScheduledShift: (state, action: PayloadAction<Shift>) => {
-      const { id, start, end, employeeID, scheduleID, clientID, published } =
+      const { id, start, end, employeeID, scheduleID, published } =
         action.payload;
       const existingShift = state.scheduledShifts.find(
-        (shift) => shift.clientID === clientID,
+        (shift) => shift.id === id,
       );
       if (existingShift) {
         existingShift.id = id;
@@ -78,11 +78,12 @@ const shiftsSlice = createSlice({
         existingShift.end = end;
         existingShift.published = published;
       }
+      console.log("updateScheduledShift", existingShift);
     },
     scheduledShiftDragAndDrop: (state, action: PayloadAction<DragPayload>) => {
       const { destinationDay, destinationEmployeeID, shiftID } = action.payload;
       const existingShift = state.scheduledShifts.find(
-        (shift) => (shift.clientID = shiftID),
+        (shift) => (shift.id = shiftID),
       );
 
       const destDayjs = dayjs(destinationDay);
@@ -104,7 +105,8 @@ const shiftsSlice = createSlice({
         existingShift.employeeID = destinationEmployeeID;
         existingShift.start = newShiftStart.toISOString();
         existingShift.end = newShiftEnd.toISOString();
-        existingShift.clientID = uuidv4() as UUID;
+        existingShift.id = uuidv4() as UUID;
+        console.log("scheduledShiftDragAndDrop:", current(existingShift));
       }
     },
     addShiftTemplate: (state, action: PayloadAction<ShiftTemplate>) => {
