@@ -80,56 +80,56 @@ CREATE TABLE IF NOT EXISTS business (
     CONSTRAINT valid_timezone CHECK (now() AT TIMEZONE timezone IS NOT NULL)
 )
 
--- Version: 1.02
--- Description: Create table products
-CREATE TABLE IF NOT EXISTS products (
-	product_id   UUID           NOT NULL,
-    user_id      UUID           NOT NULL,
-	name         TEXT           NOT NULL,
-    cost         NUMERIC(10, 2) NOT NULL,
-	quantity     INT            NOT NULL,
-	date_created TIMESTAMP      NOT NULL,
-	date_updated TIMESTAMP      NOT NULL,
-
-	PRIMARY KEY (product_id),
-	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
-
--- Version: 1.03
--- Description: Add products view.
-CREATE OR REPLACE VIEW view_products AS
-SELECT
-    p.product_id,
-    p.user_id,
-	p.name,
-    p.cost,
-	p.quantity,
-    p.date_created,
-    p.date_updated,
-    u.name AS user_name
-FROM
-    products AS p
-JOIN
-    users AS u ON u.user_id = p.user_id;
-
--- Version: 1.04
--- Description: Create table homes
-CREATE TABLE IF NOT EXISTS homes (
-    home_id       UUID       NOT NULL,
-    type          TEXT       NOT NULL,
-    user_id       UUID       NOT NULL,
-    address_1     TEXT       NOT NULL,
-    address_2     TEXT       NULL,
-    zip_code      TEXT       NOT NULL,
-    city          TEXT       NOT NULL,
-    state         TEXT       NOT NULL,
-    country       TEXT       NOT NULL,
-    date_created  TIMESTAMP  NOT NULL,
-    date_updated  TIMESTAMP  NOT NULL,
-
-    PRIMARY KEY (home_id),
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
+-- -- Version: 1.02
+-- -- Description: Create table products
+-- CREATE TABLE IF NOT EXISTS products (
+-- 	product_id   UUID           NOT NULL,
+--     user_id      UUID           NOT NULL,
+-- 	name         TEXT           NOT NULL,
+--     cost         NUMERIC(10, 2) NOT NULL,
+-- 	quantity     INT            NOT NULL,
+-- 	date_created TIMESTAMP      NOT NULL,
+-- 	date_updated TIMESTAMP      NOT NULL,
+--
+-- 	PRIMARY KEY (product_id),
+-- 	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+-- );
+--
+-- -- Version: 1.03
+-- -- Description: Add products view.
+-- CREATE OR REPLACE VIEW view_products AS
+-- SELECT
+--     p.product_id,
+--     p.user_id,
+-- 	p.name,
+--     p.cost,
+-- 	p.quantity,
+--     p.date_created,
+--     p.date_updated,
+--     u.name AS user_name
+-- FROM
+--     products AS p
+-- JOIN
+--     users AS u ON u.user_id = p.user_id;
+--
+-- -- Version: 1.04
+-- -- Description: Create table homes
+-- CREATE TABLE IF NOT EXISTS homes (
+--     home_id       UUID       NOT NULL,
+--     type          TEXT       NOT NULL,
+--     user_id       UUID       NOT NULL,
+--     address_1     TEXT       NOT NULL,
+--     address_2     TEXT       NULL,
+--     zip_code      TEXT       NOT NULL,
+--     city          TEXT       NOT NULL,
+--     state         TEXT       NOT NULL,
+--     country       TEXT       NOT NULL,
+--     date_created  TIMESTAMP  NOT NULL,
+--     date_updated  TIMESTAMP  NOT NULL,
+--
+--     PRIMARY KEY (home_id),
+--     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+-- );
 
 -- Version 1.05
 -- Description: Create table shifts
@@ -172,7 +172,6 @@ END IF;
 
 -- Version 1.07
 -- Description: Create table recurring_pattern 
-
 CREATE TABLE IF NOT EXISTS recurring_pattern (
     shift_id               UUID            NOT NULL,
     recurring_type         recurring_type  NOT NULL,
@@ -188,7 +187,7 @@ CREATE TABLE IF NOT EXISTS recurring_pattern (
 );
 
 -- Version 1.08
--- Description: Create table shift_instace_exception
+-- Description: Create table shift_instance_exception
 CREATE TABLE IF NOT EXISTS shift_instance_exception (
     shift_exception_id  UUID         NOT NULL,
     shift_id            UUID         NOT NULL,
@@ -202,6 +201,14 @@ CREATE TABLE IF NOT EXISTS shift_instance_exception (
     created_date        TIMESTAMPTZ  NOT NULL,
 );
 
-CREATE TABLE IF NOT EXISTS shfit_template (
+CREATE TABLE IF NOT EXISTS shift_template (
+    shift_template_id  UUID  NOT NULL,
+    template_name      TEXT  NOT NULL,
+    role_id            UUID  NOT NULL,
+    start_time         TIME  NOT NULL,
+    end_time           TIME  NOT NULL,
     
+
+    PRIMARY KEY (shift_template_id),
+    FOREIGN KEY (role_id) REFERENCES role(role_id) ON DELETE CASCADE,
 )
