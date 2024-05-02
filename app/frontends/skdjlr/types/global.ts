@@ -6,6 +6,7 @@ export type Business = {
   name: string;
   industry: string;
   startOfWorkWeek: DayOfWeek;
+  timezone: string;
   // address information
 };
 
@@ -76,12 +77,10 @@ export type ShiftTemplate = {
 
 export type Shift = {
   id: UUID | "";
-  clientID: UUID;
   employeeID: UUID;
   scheduleID: UUID;
   roleID: UUID;
   start: string; // ISO 8601 format
   end: string;
-  // bgColor: string;
   published: boolean;
 };

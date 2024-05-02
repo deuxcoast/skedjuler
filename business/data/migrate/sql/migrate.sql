@@ -57,22 +57,26 @@ CREATE TABLE IF NOT EXISTS employee_role (
 
 
 CREATE TABLE IF NOT EXISTS business (
-    business_id     UUID     NOT NULL,
-    business_name   TEXT     NOT NULL,
-    industry_id     UUID     NOT NULL,
-    timezone        TEXT     NOT NULL,
-    address_1       TEXT     NOT NULL,
-    address_2       TEXT     NULL,
-    zip_code        TEXT     NOT NULL,
-    city            TEXT     NOT NULL,
-    state           TEXT     NOT NULL,
-    country         TEXT     NOT NULL,
-    gmaps_place_id  TEXT     NULL, 
-    image_url       TEXT     NULL,
+    business_id     UUID         NOT NULL,
+    business_name   TEXT         NOT NULL,
+    industry_id     UUID         NOT NULL,
+    timezone        TEXT         NOT NULL,
+    address_1       TEXT         NOT NULL,
+    address_2       TEXT         NULL,
+    zip_code        TEXT         NOT NULL,
+    city            TEXT         NOT NULL,
+    state           TEXT         NOT NULL,
+    country         TEXT         NOT NULL,
+    gmaps_place_id  TEXT         NULL, 
+    image_url       TEXT         NULL,
+    created_date    TIMESTAMPTZ  NOT NULL,
+    updated_date    TIMESTAMPTZ  NOT NULL,
+    created_by      UUID         NOT NULL,
     
 
     PRIMARY KEY (business_id),
     FOREIGN KEY (industry_id) REFERENCES industry(industry_id) ON DELETE CASCADE,
+    FOREIGN KEY (created_by)  REFERENVES user(user_id) ON DELETE CASCADE,
     CONSTRAINT valid_timezone CHECK (now() AT TIMEZONE timezone IS NOT NULL)
 )
 
@@ -197,3 +201,7 @@ CREATE TABLE IF NOT EXISTS shift_instance_exception (
     created_by          UUID         NOT NULL,
     created_date        TIMESTAMPTZ  NOT NULL,
 );
+
+CREATE TABLE IF NOT EXISTS shfit_template (
+    
+)
