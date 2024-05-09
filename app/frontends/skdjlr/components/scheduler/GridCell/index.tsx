@@ -4,16 +4,18 @@ import ScheduledShiftNode from "@/components/scheduler/ScheduledShiftNode";
 import { useAppSelector } from "@/lib/hooks";
 import { selectShiftsByEmployeeIdAndDay } from "@/lib/features/scheduledShifts/scheduledShiftsSlice";
 import { EmptyCellAddShift } from "./hover-empty-cell";
-import { useState } from "react";
+import { use, useState } from "react";
 import { EmployeeDayProps } from "../types";
 import { Droppable } from "@hello-pangea/dnd";
 import dayjs from "dayjs";
 import { useApp } from "@/lib/context/AppContext";
+import { selectTimeZone } from "@/lib/features/calendar/calendarSlice";
 
 export default function GridCell({ day, employee }: EmployeeDayProps) {
+  const timezone = useAppSelector(selectTimeZone);
   // get date from ISO string with no time data to circumvent hydration related
   // errors due to UTC time on server and local time on client
-  const date = day.substring(0, 10);
+  const date = dayjs(day).format("YYYY-MM-DD");
 
   const [hidden, setHidden] = useState(true);
   const appContext = useApp();
@@ -61,8 +63,7 @@ export default function GridCell({ day, employee }: EmployeeDayProps) {
               shifts.map((shift, idx) => (
                 <ScheduledShiftNode key={shift.id} shift={shift} index={idx} />
               ))
-            ) : // ) : !hidden && !isDragging ? (
-            !hidden ? (
+            ) : !hidden && !isDragging ? (
               <EmptyCellAddShift employee={employee} day={day} />
             ) : null}
             {provided.placeholder}

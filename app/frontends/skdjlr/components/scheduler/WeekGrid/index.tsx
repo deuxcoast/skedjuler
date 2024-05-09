@@ -9,6 +9,7 @@ import { useSelectedScheduleEmployees } from "@/utils/useSelectedScheduleEmploye
 
 export default function WeekGrid() {
   const week = useAppSelector(selectCurrentWeek);
+  // console.log("week:", week);
 
   const selectedScheduleEmployees = useSelectedScheduleEmployees();
 

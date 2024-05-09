@@ -47,6 +47,7 @@ export function getWeek(dayScheduleStarts: number, week = dayjs().week()) {
     const dayISO = day.toISOString();
     return dayISO;
   });
+  // console.log(weekDates);
 
   return weekDates;
 }
@@ -58,7 +59,7 @@ export function getWeek(dayScheduleStarts: number, week = dayjs().week()) {
  * @param formatString - A format string to feed into the Dayjs format function
  */
 export function formatShiftTemplateTime(
-  shiftTime: THourMinuteTime,
+  shiftTime: string,
   formatString: string,
 ): string {
   const [hour, minute] = parseShiftTimeString(shiftTime);
@@ -127,10 +128,10 @@ export function parseIsoIntoHourMin(
  * endShiftTime.
  */
 export function formatShiftTimeStartToEnd(
-  startShiftTime: THourMinuteTime,
-  endShiftTime: THourMinuteTime,
+  startShiftTime: string,
+  endShiftTime: string,
 ): string {
-  const startString = formatShiftTemplateTime(startShiftTime, "h:mm a");
-  const endString = formatShiftTemplateTime(endShiftTime, "h:mm a");
+  const startString = dayjs(startShiftTime).format("h:mm a");
+  const endString = dayjs(endShiftTime).format("h:mm a");
   return startString.concat(" - ", endString);
 }

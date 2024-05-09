@@ -58,8 +58,8 @@ export type ShiftTemplate = {
   id: UUID;
   name: string;
   roleId: UUID;
-  start: THourMinuteTime;
-  end: THourMinuteTime;
+  start: string; // ISO with no timezone. This is a floating time that shouldn't
+  end: string; // change with DST.
   /*
    * TODO: We are going to create a pallete of selectable colors and define them
    * as CSS variables. The color field of the shift will be a const representing

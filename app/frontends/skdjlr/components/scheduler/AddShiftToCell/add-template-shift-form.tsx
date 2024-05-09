@@ -91,18 +91,20 @@ export default function AddTemplateShiftForm({
       );
       if (selectedTemplate) {
         const { start, end } = selectedTemplate;
-        const [startHour, startMin, startAMPM] =
-          parseShiftTimeIntoTwelveHour(start);
-
-        const [endHour, endMin, endAMPM] = parseShiftTimeIntoTwelveHour(end);
+        const startTime = dayjs(start);
+        const endTime = dayjs(end);
 
         // Update form values.
-        form.setValue("startHour", startHour, { shouldValidate: true });
-        form.setValue("startMin", startMin, { shouldValidate: true });
-        form.setValue("startAMPM", startAMPM, { shouldValidate: true });
-        form.setValue("endHour", endHour, { shouldValidate: true });
-        form.setValue("endMin", endMin, { shouldValidate: true });
-        form.setValue("endAMPM", endAMPM, { shouldValidate: true });
+        form.setValue("startHour", startTime.hour() % 12, {
+          shouldValidate: true,
+        });
+        form.setValue("startMin", startTime.minute(), { shouldValidate: true });
+        form.setValue("startAMPM", startTime.format("A"), {
+          shouldValidate: true,
+        });
+        form.setValue("endHour", endTime.hour() % 12, { shouldValidate: true });
+        form.setValue("endMin", endTime.minute(), { shouldValidate: true });
+        form.setValue("endAMPM", endTime.format("A"), { shouldValidate: true });
       }
     }
 
@@ -164,18 +166,7 @@ export default function AddTemplateShiftForm({
       end: endDate.utc().toISOString(),
       published: false,
     };
-    // console.log("scheduledShift:", scheduledShift);
     dispatch(addScheduledShift(scheduledShift));
-    // dispatch(
-    //   addScheduledShift(
-    //     scheduledShift.start,
-    //     scheduledShift.end,
-    //     scheduledShift.employeeID,
-    //     scheduledShift.roleID,
-    //     scheduledShift.scheduleID,
-    //     scheduledShift.published,
-    //   ),
-    // );
   }
   return (
     <>

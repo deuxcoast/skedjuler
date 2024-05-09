@@ -50,7 +50,10 @@ export const selectShiftsByEmployeeIdAndDay = createCachedSelector(
   [selectShiftsByEmployeeId, selectDay],
   (shiftsByEmployee, dayISO) => {
     const day = dayjs(dayISO);
-    return shiftsByEmployee.filter((shift) => day.isSame(shift.start, "day"));
+    return shiftsByEmployee.filter((shift) => {
+      console.log(shift);
+      return day.isSame(shift.start, "day");
+    });
   },
 )((_, props) => `${props.employeeId}:${props.dayISO}`);
 

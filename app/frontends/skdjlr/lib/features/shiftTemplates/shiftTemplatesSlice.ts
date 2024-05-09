@@ -2,11 +2,7 @@ import { UUID } from "crypto";
 import { RootState } from "@/lib/store";
 import { SampleData } from "@/sample-data/lmno-2";
 import { ShiftTemplate } from "@/types/global";
-import {
-  createEntityAdapter,
-  createSelector,
-  createSlice,
-} from "@reduxjs/toolkit";
+import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 
 interface ShiftTemplatesState {
   entities: {

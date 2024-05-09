@@ -1,8 +1,9 @@
 "use client";
 
 import { useApp } from "@/lib/context/AppContext";
+import { selectTimeZone } from "@/lib/features/calendar/calendarSlice";
 import { updateScheduledShift } from "@/lib/features/scheduledShifts/scheduledShiftsSlice";
-import { useAppDispatch } from "@/lib/hooks";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { DragDropContext } from "@hello-pangea/dnd";
 import dayjs from "dayjs";
 import { Fragment, useCallback } from "react";
@@ -13,6 +14,7 @@ interface AppLayoutProps {
 
 export default function SchedulerLayout({ children }: AppLayoutProps) {
   const dispatch = useAppDispatch();
+  const timezone = useAppSelector(selectTimeZone);
 
   const { handleDrag, handleDrop } = useApp();
 
@@ -45,15 +47,14 @@ export default function SchedulerLayout({ children }: AppLayoutProps) {
       if (!destination) return;
 
       const [destDay, destEmployeeId] = destination.droppableId.split("::");
-      const destDayOfYear = dayjs(destDay).dayOfYear();
+
+      const destDayObj = dayjs(destDay);
+      const destDayOfYear = destDayObj.dayOfYear();
+
       const newShiftStart = shiftStartObj
         .dayOfYear(destDayOfYear)
-        .utc()
         .toISOString();
-      const newShiftEnd = shiftEndObj
-        .dayOfYear(destDayOfYear)
-        .utc()
-        .toISOString();
+      const newShiftEnd = shiftEndObj.dayOfYear(destDayOfYear).toISOString();
 
       // we only care about cases where a shiftNode has been dragged into another
       // GridCell. If the cell hasn't changed, then we simply keep it where it is.
