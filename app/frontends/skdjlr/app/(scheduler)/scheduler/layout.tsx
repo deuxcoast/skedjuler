@@ -2,8 +2,7 @@
 
 import { useApp } from "@/lib/context/AppContext";
 import { updateScheduledShift } from "@/lib/features/scheduledShifts/scheduledShiftsSlice";
-import { selectShiftByID } from "@/lib/features/shifts/shiftsSlice";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { useAppDispatch } from "@/lib/hooks";
 import { DragDropContext } from "@hello-pangea/dnd";
 import dayjs from "dayjs";
 import { Fragment, useCallback } from "react";
