@@ -3,12 +3,14 @@ import { getWeek } from "@/utils/dates";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import dayjs from "dayjs";
 import weekOfYear from "dayjs/plugin/weekOfYear";
+import dayOfYear from "dayjs/plugin/dayOfYear";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
 dayjs.extend(weekOfYear);
+dayjs.extend(dayOfYear);
 dayjs.extend(timezone);
 dayjs.extend(utc);
 dayjs.extend(advancedFormat);

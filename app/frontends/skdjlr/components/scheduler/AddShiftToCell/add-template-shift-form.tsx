@@ -29,18 +29,17 @@ import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { CaretDownIcon, CaretUpIcon } from "@radix-ui/react-icons";
 import { CollapsibleContent } from "@radix-ui/react-collapsible";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import {
-  addScheduledShift,
-  selectShiftTemplatesForCurrentSchedule,
-} from "@/lib/features/shifts/shiftsSlice";
-import { NULL_ID } from "@/types/constants";
-import { selectCurrentlySelectedSchedule } from "@/lib/features/schedules/schedulesSlice";
+import { addScheduledShift } from "@/lib/features/scheduledShifts/scheduledShiftsSlice";
+import { v4 as uuidv4 } from "uuid";
+import { UUID } from "crypto";
 import { DialogClose } from "@/components/ui/dialog";
 import { EmployeeDayProps } from "@/components/scheduler/types";
 import dayjs from "dayjs";
+import { useSelectedSchedule } from "@/utils/useSelectedSchedule";
+import { useCurrentShiftTemplates } from "@/utils/useCurrentShiftTemplates";
 
 const addTemplateShiftFormSchema = z.object({
-  shiftTemplateID: z.string().uuid(),
+  shiftTemplateId: z.string().uuid(),
   startHour: z.coerce.number(),
   startMin: z.number(),
   startAMPM: z.string(),
@@ -56,12 +55,13 @@ export default function AddTemplateShiftForm({
   employee,
   day,
 }: EmployeeDayProps) {
+  // console.log(employee);
   const [isEditShiftOpen, setIsEditShiftOpen] = useState(false);
 
   const dayObj = dayjs(day);
 
   const defaultValues: Partial<AddTemplateShiftFormValues> = {
-    shiftTemplateID: "",
+    shiftTemplateId: "",
     startHour: 0,
     startMin: 0,
     startAMPM: "",
@@ -78,14 +78,12 @@ export default function AddTemplateShiftForm({
   });
 
   const dispatch = useAppDispatch();
-  const currentSchedule = useAppSelector(selectCurrentlySelectedSchedule);
-  const currentShiftTemplates = useAppSelector(
-    selectShiftTemplatesForCurrentSchedule,
-  );
+  const selectedSchedule = useSelectedSchedule();
+  const currentShiftTemplates = useCurrentShiftTemplates();
 
-  const shiftTemplateSelected = form.watch("shiftTemplateID");
+  const shiftTemplateSelected = form.watch("shiftTemplateId");
 
-  // Set default values when shiftTemplateID changes
+  // Set default values when shiftTemplateId changes
   useEffect(() => {
     if (shiftTemplateSelected) {
       const selectedTemplate = currentShiftTemplates.find(
@@ -107,7 +105,12 @@ export default function AddTemplateShiftForm({
         form.setValue("endAMPM", endAMPM, { shouldValidate: true });
       }
     }
-  }, [shiftTemplateSelected, currentShiftTemplates, form]);
+
+    // TODO: Including currentShiftTemplates in the dependency array causes a
+    // stack overflow. I lazily removed it for now, but I believe I need to use
+    // a deep compare function (e.g., lodash)
+    // https://stackoverflow.com/questions/54095994/react-useeffect-comparing-objects/54096391#54096391
+  }, [shiftTemplateSelected, form]);
 
   // The value from the select component for hours and minutes is initially a
   // string, but must be converted back into a number for form validation.
@@ -137,28 +140,42 @@ export default function AddTemplateShiftForm({
       data.endAMPM,
     );
 
-    const startDate = dayObj.hour(startTime.hour()).minute(startTime.minute());
-    let endDate = dayObj.hour(endTime.hour()).minute(startTime.minute());
+    // console.log("startTime:", startTime);
+    const startDate = dayObj
+      .hour(startTime.hour())
+      .minute(startTime.minute())
+      .second(0)
+      .millisecond(0);
+    // console.log("startDate:", startDate);
+    let endDate = dayObj
+      .hour(endTime.hour())
+      .minute(startTime.minute())
+      .second(0)
+      .millisecond(0);
+
+    const tempId = uuidv4() as UUID;
 
     const scheduledShift = {
-      employeeID: employee.id,
-      scheduleID: currentSchedule.id,
-      roleID: employee.rolesID[0], // TODO: Add logic for setting the role when there is multiple
+      id: tempId,
+      employeeId: employee.id,
+      scheduleId: selectedSchedule.id,
+      roleId: employee.rolesId[0], // TODO: Add logic for setting the role when there is multiple
       start: startDate.utc().toISOString(),
       end: endDate.utc().toISOString(),
       published: false,
     };
-    console.log("scheduledShift:", scheduledShift);
-    dispatch(
-      addScheduledShift(
-        scheduledShift.start,
-        scheduledShift.end,
-        scheduledShift.employeeID,
-        scheduledShift.roleID,
-        scheduledShift.scheduleID,
-        scheduledShift.published,
-      ),
-    );
+    // console.log("scheduledShift:", scheduledShift);
+    dispatch(addScheduledShift(scheduledShift));
+    // dispatch(
+    //   addScheduledShift(
+    //     scheduledShift.start,
+    //     scheduledShift.end,
+    //     scheduledShift.employeeID,
+    //     scheduledShift.roleID,
+    //     scheduledShift.scheduleID,
+    //     scheduledShift.published,
+    //   ),
+    // );
   }
   return (
     <>
@@ -170,7 +187,7 @@ export default function AddTemplateShiftForm({
           <div>
             <FormField
               control={form.control}
-              name="shiftTemplateID"
+              name="shiftTemplateId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Shift Template</FormLabel>

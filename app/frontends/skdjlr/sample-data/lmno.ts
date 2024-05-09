@@ -21,6 +21,7 @@ type TestData = {
 const SampleData: TestData = {
   business: {
     id: "018ecb4a-3ecb-7a62-93bb-652113934c2d",
+    timezone: "America/New_York",
     name: "LMNO",
     industry: "Restaurant",
     startOfWorkWeek: DAY_OF_WEEK.MONDAY,

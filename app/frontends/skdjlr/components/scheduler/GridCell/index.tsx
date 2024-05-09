@@ -2,11 +2,13 @@
 
 import ScheduledShiftNode from "@/components/scheduler/ScheduledShiftNode";
 import { useAppSelector } from "@/lib/hooks";
-import { selectShiftsByEmployeeIDAndDay } from "@/lib/features/shifts/shiftsSlice";
+import { selectShiftsByEmployeeIdAndDay } from "@/lib/features/scheduledShifts/scheduledShiftsSlice";
 import { EmptyCellAddShift } from "./hover-empty-cell";
 import { useState } from "react";
 import { EmployeeDayProps } from "../types";
 import { Droppable } from "@hello-pangea/dnd";
+import dayjs from "dayjs";
+import { useApp } from "@/lib/context/AppContext";
 
 export default function GridCell({ day, employee }: EmployeeDayProps) {
   // get date from ISO string with no time data to circumvent hydration related
@@ -14,15 +16,27 @@ export default function GridCell({ day, employee }: EmployeeDayProps) {
   const date = day.substring(0, 10);
 
   const [hidden, setHidden] = useState(true);
-  const isDragging = useAppSelector((state) => state.shifts.isDragging);
+  const appContext = useApp();
+  const isDragging = appContext.isDragging;
 
   const shifts = useAppSelector((state) =>
-    selectShiftsByEmployeeIDAndDay(state, {
-      employeeID: employee.id,
+    selectShiftsByEmployeeIdAndDay(state, {
+      employeeId: employee.id,
       dayISO: day,
     }),
   );
   const shiftsPresent = shifts.length > 0;
+
+  if (shiftsPresent) {
+    // console.log(dayjs(day).format("MM/DD/YYYY"));
+    // console.log(shifts);
+    shifts.forEach((shift) => {
+      // console.log("employeeId:", shift.employeeId);
+      // console.log("start:", shift.start);
+      // console.log("end:", shift.end);
+    });
+  }
+
   const handleMouseEnter = () => {
     setHidden(false);
   };
@@ -47,7 +61,8 @@ export default function GridCell({ day, employee }: EmployeeDayProps) {
               shifts.map((shift, idx) => (
                 <ScheduledShiftNode key={shift.id} shift={shift} index={idx} />
               ))
-            ) : !hidden && !isDragging ? (
+            ) : // ) : !hidden && !isDragging ? (
+            !hidden ? (
               <EmptyCellAddShift employee={employee} day={day} />
             ) : null}
             {provided.placeholder}

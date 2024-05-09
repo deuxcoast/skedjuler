@@ -1,52 +1,44 @@
 import { RootState } from "@/lib/store";
-import { SampleData } from "@/sample-data/lmno";
+import { SampleData } from "@/sample-data/lmno-2";
 import { Employee } from "@/types/global";
-import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  createEntityAdapter,
+  createSelector,
+  createSlice,
+} from "@reduxjs/toolkit";
 import { UUID } from "crypto";
-import { selectCurrentlySelectedSchedule } from "../schedules/schedulesSlice";
+import {
+  selectScheduleById,
+  selectScheduleByIndex,
+} from "../schedules/schedulesSlice";
 import { getEmployeesByRoles } from "@/utils/getEmployeesByRole";
 
-const employeeData = SampleData.employees;
-
 interface EmployeesState {
-  employees: Employee[];
+  entities: {
+    [id: UUID]: Employee;
+  };
+  ids: UUID[];
 }
 
-const initialState: EmployeesState = {
-  employees: employeeData,
-};
+const employeeData = SampleData.employees;
+const initialState: EmployeesState = employeeData;
+
+const employeesAdapter = createEntityAdapter({
+  selectId: (employee: Employee) => employee.id,
+});
 
 const employeesSlice = createSlice({
   name: "employees",
   initialState,
   reducers: {
-    addEmployee: (state, action: PayloadAction<Employee>) => {
-      state.employees.push(action.payload);
-    },
-    removeEmployeeByID: (state, action: PayloadAction<UUID>) => {
-      state.employees.filter((employee) => employee.id !== action.payload);
-    },
+    addEmployee: employeesAdapter.addOne,
+    removeEmployeeByID: employeesAdapter.removeOne,
   },
 });
 
 export const { addEmployee, removeEmployeeByID } = employeesSlice.actions;
 
-export const selectEmployeeID = (state: RootState, employeeID: UUID) =>
-  employeeID;
-
-export const selectEmployees = (state: RootState) => state.employees.employees;
-
-export const selectEmployeeByID = createSelector(
-  [selectEmployees, selectEmployeeID],
-  (employees, id) => employees.filter((employee) => employee.id === id),
-);
-
-export const selectCurrentScheduleEmployees = createSelector(
-  [selectEmployees, selectCurrentlySelectedSchedule],
-  (employees, currentSchedule) => {
-    const currentScheduleRoleIDs = currentSchedule.roles;
-    return getEmployeesByRoles(employees, currentScheduleRoleIDs);
-  },
-);
+export const { selectById: selectEmployeeByID, selectAll: selectAllEmployees } =
+  employeesAdapter.getSelectors<RootState>((state) => state.employees);
 
 export default employeesSlice.reducer;

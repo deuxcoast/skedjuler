@@ -7,27 +7,29 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useApp } from "@/lib/context/AppContext";
 import {
+  selectScheduleByIndex,
   selectSchedules,
-  selectCurrentlySelectedSchedule,
-  setCurrentlySelectedScheduleById,
 } from "@/lib/features/schedules/schedulesSlice";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { useAppSelector } from "@/lib/hooks";
 import { UUID } from "crypto";
 import { ChevronsDown } from "lucide-react";
 
 export default function SchedulerSelector() {
-  const selectedSchedule = useAppSelector(selectCurrentlySelectedSchedule);
+  const { selectedScheduleIndex, setSelectedScheduleIndex } = useApp();
+  const selectedSchedule = useAppSelector((state) =>
+    selectScheduleByIndex(state, selectedScheduleIndex),
+  );
   const schedules = useAppSelector(selectSchedules);
-
-  const dispatch = useAppDispatch();
 
   const filterOutCurrentSchedule = () => {
     return schedules.filter((schedule) => schedule.id !== selectedSchedule.id);
   };
 
   const handleChangeSelectedSchedule = (scheduleID: UUID) => {
-    dispatch(setCurrentlySelectedScheduleById(scheduleID));
+    const idx = schedules.findIndex((schedule) => schedule.id === scheduleID);
+    setSelectedScheduleIndex(idx);
   };
 
   return (

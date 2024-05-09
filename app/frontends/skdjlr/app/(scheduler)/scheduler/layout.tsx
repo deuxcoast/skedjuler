@@ -1,12 +1,11 @@
 "use client";
 
-import {
-  isDragging,
-  isNotDragging,
-  scheduledShiftDragAndDrop,
-} from "@/lib/features/shifts/shiftsSlice";
-import { useAppDispatch } from "@/lib/hooks";
+import { useApp } from "@/lib/context/AppContext";
+import { updateScheduledShift } from "@/lib/features/scheduledShifts/scheduledShiftsSlice";
+import { selectShiftByID } from "@/lib/features/shifts/shiftsSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { DragDropContext } from "@hello-pangea/dnd";
+import dayjs from "dayjs";
 import { Fragment, useCallback } from "react";
 
 interface AppLayoutProps {
@@ -15,6 +14,8 @@ interface AppLayoutProps {
 
 export default function SchedulerLayout({ children }: AppLayoutProps) {
   const dispatch = useAppDispatch();
+
+  const { handleDrag, handleDrop } = useApp();
 
   // using useCallback is optional
   const onBeforeCapture = useCallback(() => {
@@ -26,37 +27,55 @@ export default function SchedulerLayout({ children }: AppLayoutProps) {
   }, []);
 
   const onDragStart = useCallback(() => {
-    dispatch(isDragging());
-  }, [dispatch]);
+    handleDrag();
+  }, [handleDrag]);
 
   const onDragUpdate = useCallback(() => {
     /*...*/
   }, []);
 
-  // FIX: I did type any...
   const onDragEnd = useCallback(
     (result: any) => {
-      dispatch(isNotDragging());
+      handleDrop();
       const { source, destination, draggableId } = result;
-      const [destDay, destEmployeeId] = destination.droppableId.split("::");
+      const [shiftId, shiftStart, shiftEnd] = draggableId.split("::");
+      const shiftStartObj = dayjs(shiftStart);
+      const shiftEndObj = dayjs(shiftEnd);
 
       // dropped outside of the scheduler grid
       if (!destination) return;
 
+      const [destDay, destEmployeeId] = destination.droppableId.split("::");
+      const destDayOfYear = dayjs(destDay).dayOfYear();
+      const newShiftStart = shiftStartObj
+        .dayOfYear(destDayOfYear)
+        .utc()
+        .toISOString();
+      const newShiftEnd = shiftEndObj
+        .dayOfYear(destDayOfYear)
+        .utc()
+        .toISOString();
+
       // we only care about cases where a shiftNode has been dragged into another
       // GridCell. If the cell hasn't changed, then we simply keep it where it is.
       if (destination.droppableId === source.droppableId) return;
+
       dispatch(
-        scheduledShiftDragAndDrop({
-          destinationDay: destDay,
-          destinationEmployeeID: destEmployeeId,
-          shiftID: draggableId,
+        updateScheduledShift({
+          id: shiftId,
+          changes: {
+            start: newShiftStart,
+            end: newShiftEnd,
+            employeeId: destEmployeeId,
+          },
         }),
       );
     },
-    [dispatch],
+    [dispatch, handleDrop],
   );
+  /////
 
+  //////
   return (
     <Fragment>
       <DragDropContext

@@ -13,12 +13,12 @@ import {
 import { parseShiftTimeIntoTwelveHour } from "@/utils/dates";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { selectCurrentlySelectedSchedule } from "@/lib/features/schedules/schedulesSlice";
-import { useAppSelector } from "@/lib/hooks";
 import { EmployeeDayProps } from "@/components/scheduler/types";
+import { useSelectedSchedule } from "@/utils/useSelectedSchedule";
+import { useCurrentShiftTemplates } from "@/utils/useCurrentShiftTemplates";
 
 const addCustomShiftSchema = z.object({
-  shiftTemplateID: z.string().uuid(),
+  shiftTemplateId: z.string().uuid(),
   startHour: z.coerce.number(),
   startMin: z.number(),
   startAMPM: z.string(),
@@ -34,16 +34,16 @@ export default function AddCustomShiftForm({
   employee,
   day,
 }: EmployeeDayProps) {
-  const currentSchedule = useAppSelector(selectCurrentlySelectedSchedule);
+  const selectedSchedule = useSelectedSchedule();
 
   const [defaultStartHour, defaultStartMinute, defaultStartAMPM] =
-    parseShiftTimeIntoTwelveHour(currentSchedule.defaultShiftStart);
+    parseShiftTimeIntoTwelveHour(selectedSchedule.defaultShiftStart);
 
   const [defaultEndHour, defaultEndMinute, defaultEndAMPM] =
-    parseShiftTimeIntoTwelveHour(currentSchedule.defaultShiftEnd);
+    parseShiftTimeIntoTwelveHour(selectedSchedule.defaultShiftEnd);
 
   const defaultValues: Partial<AddCustomShiftFormValues> = {
-    shiftTemplateID: "",
+    shiftTemplateId: "",
     startHour: defaultStartHour,
     startMin: defaultStartMinute,
     startAMPM: defaultStartAMPM,

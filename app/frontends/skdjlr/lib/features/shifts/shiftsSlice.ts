@@ -1,7 +1,12 @@
 import { RootState } from "@/lib/store";
-import { SampleData } from "@/sample-data/lmno";
+import { SampleData } from "@/sample-data/lmno-2";
 import { Shift, ShiftTemplate } from "@/types/global";
-import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  createEntityAdapter,
+  createSelector,
+  createSlice,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import { createCachedSelector } from "re-reselect";
 import { v4 as uuidv4 } from "uuid";
 import { UUID } from "crypto";
@@ -14,9 +19,18 @@ const shiftTemplatesData = SampleData.shiftTemplates;
 // const scheduledShiftsData = SampleData.scheduledShifts;
 
 interface ShiftState {
-  isDragging: boolean;
-  shiftTemplates: ShiftTemplate[];
-  scheduledShifts: Shift[];
+  shiftTemplates: {
+    entities: {
+      [id: UUID]: ShiftTemplate;
+    };
+    ids: UUID[];
+  };
+  scheduledShifts: {
+    entities: {
+      [id: UUID]: Shift;
+    };
+    ids: UUID[];
+  };
 }
 
 type DragPayload = {
@@ -25,42 +39,53 @@ type DragPayload = {
   shiftID: UUID;
 };
 
+export const shiftAdapter = createEntityAdapter({
+  selectId: (shift: Shift) => shift.id,
+  sortComparer: (a: Shift, b: Shift) =>
+    a.employeeID.localeCompare(b.employeeID),
+});
+
 const initialState: ShiftState = {
-  isDragging: false,
   shiftTemplates: shiftTemplatesData,
-  scheduledShifts: [],
+  scheduledShifts: {
+    entities: {},
+    ids: [],
+  },
 };
 
-const shiftsSlice = createSlice({
+const shiftSlice = createSlice({
   name: "shifts",
   initialState,
   reducers: {
-    addScheduledShift: {
-      reducer(state, action: PayloadAction<Shift>) {
-        console.log("addScheduledShift:", action.payload);
-        state.scheduledShifts.push(action.payload);
-      },
-      prepare(
-        start: string,
-        end: string,
-        employeeID: UUID,
-        roleID: UUID,
-        scheduleID: UUID,
-        published: boolean,
-      ) {
-        return {
-          payload: {
-            id: uuidv4() as UUID,
-            start,
-            end,
-            employeeID,
-            roleID,
-            scheduleID,
-            published,
-          },
-        };
-      },
-    },
+    // addScheduledShift: {
+    //   reducer(state, action: PayloadAction<Shift>) {
+    //     console.log("addScheduledShift:", action.payload);
+    //     state.scheduledShifts.entities.push(action.payload);
+    //   },
+    //   prepare(
+    //     start: string,
+    //     end: string,
+    //     employeeID: UUID,
+    //     roleID: UUID,
+    //     scheduleID: UUID,
+    //     published: boolean,
+    //   ) {
+    //     return {
+    //       payload: {
+    //         id: uuidv4() as UUID,
+    //         start,
+    //         end,
+    //         employeeID,
+    //         roleID,
+    //         scheduleID,
+    //         published,
+    //       },
+    //     };
+    //   },
+    // },
+    //
+    addScheduledShift: shiftAdapter.addOne,
+
     removeScheduledShiftByID: (state, action: PayloadAction<UUID>) => {
       state.scheduledShifts.filter((shift) => shift.id !== action.payload);
     },
@@ -105,7 +130,7 @@ const shiftsSlice = createSlice({
         existingShift.employeeID = destinationEmployeeID;
         existingShift.start = newShiftStart.toISOString();
         existingShift.end = newShiftEnd.toISOString();
-        existingShift.id = uuidv4() as UUID;
+        // existingShift.id = uuidv4() as UUID;
         console.log("scheduledShiftDragAndDrop:", current(existingShift));
       }
     },
@@ -117,12 +142,6 @@ const shiftsSlice = createSlice({
         (shiftTemplate) => shiftTemplate.id !== action.payload,
       );
     },
-    isDragging: (state) => {
-      state.isDragging = true;
-    },
-    isNotDragging: (state) => {
-      state.isDragging = false;
-    },
   },
 });
 
@@ -132,11 +151,12 @@ export const {
   addShiftTemplate,
   removeShiftTemplateByID,
   scheduledShiftDragAndDrop,
-  isDragging,
-  isNotDragging,
-} = shiftsSlice.actions;
+} = shiftSlice.actions;
 
-export const selectShifts = (state: RootState) => state.shifts.scheduledShifts;
+// export const selectShifts = (state: RootState) => state.shifts.scheduledShifts;
+export const { selectAll: selectShifts } = shiftAdapter.getSelectors(
+  (state) => state.shifts,
+);
 
 const selectShiftID = (_: RootState, shiftID: UUID) => shiftID;
 const selectDay = (_: RootState, args: SelectorArgs) => args.dayISO;

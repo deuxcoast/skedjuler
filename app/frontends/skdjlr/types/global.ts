@@ -25,7 +25,7 @@ export type Schedule = {
    */
   name: string;
   /*
-   * The IDs for the roles included in this schedule. This is used to determine
+   * The Ids for the roles included in this schedule. This is used to determine
    * which employees are eligible for this schedule.
    */
   roles: UUID[];
@@ -41,7 +41,7 @@ export type Employee = {
   id: UUID;
   firstName: string;
   lastName: string;
-  rolesID: UUID[];
+  rolesId: UUID[];
   hourlyWage?: string;
   phoneNumber?: string;
   email?: string;
@@ -57,7 +57,7 @@ export type THourMinutePeriodTuple = [number, number, string];
 export type ShiftTemplate = {
   id: UUID;
   name: string;
-  roleID: UUID;
+  roleId: UUID;
   start: THourMinuteTime;
   end: THourMinuteTime;
   /*
@@ -77,9 +77,9 @@ export type ShiftTemplate = {
 
 export type Shift = {
   id: UUID | "";
-  employeeID: UUID;
-  scheduleID: UUID;
-  roleID: UUID;
+  employeeId: UUID;
+  scheduleId: UUID;
+  roleId: UUID;
   start: string; // ISO 8601 format
   end: string;
   published: boolean;

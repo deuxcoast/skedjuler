@@ -1,48 +1,56 @@
 import { RootState } from "@/lib/store";
-import { SampleData } from "@/sample-data/lmno";
+import { SampleData } from "@/sample-data/lmno-2";
 import { Role } from "@/types/global";
-import { createSelector, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  createEntityAdapter,
+  createSelector,
+  createSlice,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import { UUID } from "crypto";
 
-const rolesData = SampleData.roles;
-
 interface RolesState {
-  roles: Role[];
+  entities: {
+    [id: UUID]: Role;
+  };
+  ids: UUID[];
 }
 
-const initialState: RolesState = {
-  roles: rolesData,
-};
+const rolesData = SampleData.roles;
+const initialState: RolesState = rolesData;
+
+const rolesAdapter = createEntityAdapter({
+  selectId: (role: Role) => role.id,
+});
 
 const rolesSlice = createSlice({
   name: "roles",
   initialState,
   reducers: {
-    addRole: (state, action: PayloadAction<Role>) => {
-      state.roles.push(action.payload);
-    },
-    removeRoleByID: (state, action: PayloadAction<UUID>) => {
-      state.roles.filter((role) => role.id !== action.payload);
-    },
+    addRole: rolesAdapter.addOne,
+    removeRole: rolesAdapter.removeOne,
   },
 });
 
-export const { addRole, removeRoleByID } = rolesSlice.actions;
+export const { addRole, removeRole } = rolesSlice.actions;
 
-export const selectRoleID = (state: RootState, roleID: UUID) => roleID;
+export const { selectById: selectRoleById, selectAll: selectRoles } =
+  rolesAdapter.getSelectors<RootState>((state) => state.roles);
 
-export const selectRoles = (state: RootState) => state.roles.roles;
+// export const selectRoleId = (_: RootState, roleId: UUID) => roleId;
+
+// export const selectRoles = (state: RootState) => state.roles.roles;
 
 export const selectRoleNames = createSelector([selectRoles], (roles) =>
   roles.map((role) => role.name),
 );
 
-export const selectRoleNameByID = createSelector(
-  [selectRoles, selectRoleID],
-  (roles, id) => {
-    const role = roles.find((role) => role.id === id);
-    return role?.name;
-  },
-);
+// export const selectRoleNameById = createSelector(
+//   [selectRoles, selectRoleId],
+//   (roles, id) => {
+//     const role = roles.find((role) => role.id === id);
+//     return role?.name;
+//   },
+// );
 
 export default rolesSlice.reducer;

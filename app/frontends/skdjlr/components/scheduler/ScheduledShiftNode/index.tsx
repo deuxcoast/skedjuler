@@ -6,7 +6,10 @@ import {
   ShiftNodeContent,
 } from "@/components/scheduler/ScheduledShiftNode/shift-node-wrapper";
 import { useAppSelector } from "@/lib/hooks";
-import { selectRoleNameByID } from "@/lib/features/roles/rolesSlice";
+import {
+  selectRoleById,
+  selectRoleNameByID,
+} from "@/lib/features/roles/rolesSlice";
 import { Draggable } from "@hello-pangea/dnd";
 
 type ShiftNodeProps = {
@@ -15,11 +18,17 @@ type ShiftNodeProps = {
 };
 
 export default function ShiftNode({ shift, index }: ShiftNodeProps) {
-  const roleName = useAppSelector((state) =>
-    selectRoleNameByID(state, shift.roleID),
-  );
+  // const roleName = useAppSelector((state) =>
+  //   selectRoleNameById(state, shift.roleId),
+  // );
+  const role = useAppSelector((state) => selectRoleById(state, shift.roleId));
+  const roleName = role.name;
+
   return (
-    <Draggable draggableId={shift.id} index={index}>
+    <Draggable
+      draggableId={`${shift.id}::${shift.start}::${shift.end}`}
+      index={index}
+    >
       {(provided) => (
         <ShiftNodeCard
           {...provided.draggableProps}

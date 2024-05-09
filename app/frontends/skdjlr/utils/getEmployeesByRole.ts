@@ -1,9 +1,9 @@
 import { Employee, Role } from "@/types/global";
 
-const getEmployeesByRoles = (employees: Employee[], roleIDs: Role["id"][]) => {
+const getEmployeesByRoles = (employees: Employee[], roleIds: Role["id"][]) => {
   const employeesByRoles = employees.filter((employee) => {
-    for (const roleID of roleIDs) {
-      if (employee.rolesID.includes(roleID)) return true;
+    for (const roleId of roleIds) {
+      if (employee.rolesId.includes(roleId)) return true;
     }
     return false;
   });
