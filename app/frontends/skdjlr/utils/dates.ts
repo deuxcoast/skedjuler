@@ -52,32 +52,6 @@ export function getWeek(dayScheduleStarts: number, week = dayjs().week()) {
   return weekDates;
 }
 
-/** A small helper function that returns the shiftTemplate time as a formatted
- * string using the Dayjs format string syntax.
- *
- * @param shiftTime - A string in the format of "HH:mm"
- * @param formatString - A format string to feed into the Dayjs format function
- */
-export function formatShiftTemplateTime(
-  shiftTime: string,
-  formatString: string,
-): string {
-  const [hour, minute] = parseShiftTimeString(shiftTime);
-  const time = dayjs().hour(hour).minute(minute);
-  return time.format(formatString);
-}
-
-/** Parse a string in the form of HH:mm into an array representing the hour (0 -23)
- * and minute of the time.
- *
- * @param shiftTime - A string in the form of "HH:mm"
- * @returns An array of numbers in the form of `[HH, mm]`.
- */
-export function parseShiftTimeString(shiftTime: THourMinuteTime): number[] {
-  const time = shiftTime.split(":");
-  return [Number(time[0]), Number(time[1])];
-}
-
 /** Parse a string in the form of HH:mm into an array representing the hour (1 -12),
  * minute and AM/PM of the time.
  *
@@ -119,14 +93,7 @@ export function parseIsoIntoHourMin(
   return [hour, min];
 }
 
-/** Represent two shifts as a string in the form of "h:mm a - h:mm a".
- *
- *
- * @param startShiftTime - A string in the form of "HH:mm"
- * @param endShiftTime - A string in the form of "HH:mm"
- * @returns A string representing the range between startShiftTime and
- * endShiftTime.
- */
+/** Represent two shifts as a string in the form of "h:mm a - h:mm a". */
 export function formatShiftTimeStartToEnd(
   startShiftTime: string,
   endShiftTime: string,

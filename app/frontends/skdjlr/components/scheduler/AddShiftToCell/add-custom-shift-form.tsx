@@ -10,14 +10,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { parseShiftTimeIntoTwelveHour } from "@/utils/dates";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { EmployeeDayProps } from "@/components/scheduler/types";
 import { useSelectedSchedule } from "@/utils/useSelectedSchedule";
-import { useCurrentShiftTemplates } from "@/utils/useCurrentShiftTemplates";
+import dayjs from "dayjs";
+import { parseTwelveHourIntoDayjs } from "@/utils/dates";
+import { UUID } from "crypto";
+import { v4 as uuidv4 } from "uuid";
+import { addScheduledShift } from "@/lib/features/scheduledShifts/scheduledShiftsSlice";
+import { useAppDispatch } from "@/lib/hooks";
+import { DialogClose } from "@/components/ui/dialog";
 
-const addCustomShiftSchema = z.object({
+const addCustomShiftFormSchema = z.object({
   shiftTemplateId: z.string().uuid(),
   startHour: z.coerce.number(),
   startMin: z.number(),
@@ -28,7 +33,7 @@ const addCustomShiftSchema = z.object({
   recurring: z.boolean(),
 });
 
-type AddCustomShiftFormValues = z.infer<typeof addCustomShiftSchema>;
+type AddCustomShiftFormValues = z.infer<typeof addCustomShiftFormSchema>;
 
 export default function AddCustomShiftForm({
   employee,
@@ -36,28 +41,29 @@ export default function AddCustomShiftForm({
 }: EmployeeDayProps) {
   const selectedSchedule = useSelectedSchedule();
 
-  const [defaultStartHour, defaultStartMinute, defaultStartAMPM] =
-    parseShiftTimeIntoTwelveHour(selectedSchedule.defaultShiftStart);
+  const dayObj = dayjs(day);
 
-  const [defaultEndHour, defaultEndMinute, defaultEndAMPM] =
-    parseShiftTimeIntoTwelveHour(selectedSchedule.defaultShiftEnd);
+  const defaultStartTime = dayjs(selectedSchedule.defaultShiftStart);
+  const defaultEndTime = dayjs(selectedSchedule.defaultShiftEnd);
 
   const defaultValues: Partial<AddCustomShiftFormValues> = {
     shiftTemplateId: "",
-    startHour: defaultStartHour,
-    startMin: defaultStartMinute,
-    startAMPM: defaultStartAMPM,
-    endHour: defaultEndHour,
-    endMin: defaultEndMinute,
-    endAMPM: defaultEndAMPM,
+    startHour: defaultStartTime.hour() % 12,
+    startMin: defaultStartTime.minute(),
+    startAMPM: defaultStartTime.format("A"),
+    endHour: defaultEndTime.hour() % 12,
+    endMin: defaultEndTime.minute(),
+    endAMPM: defaultEndTime.format("A"),
     recurring: false,
   };
 
   const form = useForm<AddCustomShiftFormValues>({
-    resolver: zodResolver(addCustomShiftSchema),
+    resolver: zodResolver(addCustomShiftFormSchema),
     defaultValues,
     mode: "onChange",
   });
+
+  const dispatch = useAppDispatch();
 
   // The value from the select component for hours and minutes is initially a
   // string, but must be converted back into a number for form validation.
@@ -76,7 +82,41 @@ export default function AddCustomShiftForm({
   };
 
   function onSubmitCustomShift(data: AddCustomShiftFormValues) {
-    console.log("Shift template submitted", data);
+    console.log(data);
+    const startTime = parseTwelveHourIntoDayjs(
+      data.startHour,
+      data.startMin,
+      data.startAMPM,
+    );
+    const endTime = parseTwelveHourIntoDayjs(
+      data.endHour,
+      data.endMin,
+      data.endAMPM,
+    );
+
+    const startDate = dayObj
+      .hour(startTime.hour())
+      .minute(startTime.minute())
+      .second(0)
+      .millisecond(0);
+    let endDate = dayObj
+      .hour(endTime.hour())
+      .minute(startTime.minute())
+      .second(0)
+      .millisecond(0);
+
+    const tempId = uuidv4() as UUID;
+
+    const scheduledShift = {
+      id: tempId,
+      employeeId: employee.id,
+      scheduleId: selectedSchedule.id,
+      roleId: employee.rolesId[0], // TODO: Add logic for setting the role when there is multiple
+      start: startDate.utc().toISOString(),
+      end: endDate.utc().toISOString(),
+      published: false,
+    };
+    dispatch(addScheduledShift(scheduledShift));
   }
 
   return (
@@ -97,6 +137,7 @@ export default function AddCustomShiftForm({
                     <Label htmlFor="startHour">Hour</Label>
                     <Select
                       name={field.name}
+                      value={field.value.toString()}
                       onValueChange={(value) =>
                         handleSelectChangeNumber(field.name, value)
                       }
@@ -135,6 +176,7 @@ export default function AddCustomShiftForm({
                       <Label htmlFor="startMin">Minute</Label>
                       <Select
                         name={field.name}
+                        value={field.value.toString()}
                         onValueChange={(value) =>
                           handleSelectChangeNumber(field.name, value)
                         }
@@ -164,8 +206,9 @@ export default function AddCustomShiftForm({
                     <div className="grid gap-2">
                       <Label htmlFor="startAMPM">AM/PM</Label>
                       <Select
+                        value={field.value}
                         onValueChange={(value) =>
-                          handleSelectChangeNumber(field.name, value)
+                          form.setValue(field.name, value)
                         }
                         defaultValue={field.value}
                       >
@@ -265,9 +308,9 @@ export default function AddCustomShiftForm({
                     <div className="grid gap-2">
                       <Label htmlFor="endAMPM">AM/PM</Label>
                       <Select
-                        value={form.watch("endAMPM")}
+                        value={field.value}
                         onValueChange={(value) =>
-                          handleSelectChangeNumber(field.name, value)
+                          form.setValue(field.name, value)
                         }
                         defaultValue={field.value}
                       >
@@ -287,7 +330,9 @@ export default function AddCustomShiftForm({
               </div>
             </div>
           </div>
-          <Button type="submit">Add Shift</Button>
+          <DialogClose asChild>
+            <Button type="submit">Add Shift</Button>
+          </DialogClose>
         </form>
       </Form>
       {/* <DevTool control={form.control} /> */}

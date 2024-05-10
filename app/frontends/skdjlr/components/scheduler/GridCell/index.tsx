@@ -4,15 +4,13 @@ import ScheduledShiftNode from "@/components/scheduler/ScheduledShiftNode";
 import { useAppSelector } from "@/lib/hooks";
 import { selectShiftsByEmployeeIdAndDay } from "@/lib/features/scheduledShifts/scheduledShiftsSlice";
 import { EmptyCellAddShift } from "./hover-empty-cell";
-import { use, useState } from "react";
+import { useState } from "react";
 import { EmployeeDayProps } from "../types";
 import { Droppable } from "@hello-pangea/dnd";
 import dayjs from "dayjs";
 import { useApp } from "@/lib/context/AppContext";
-import { selectTimeZone } from "@/lib/features/calendar/calendarSlice";
 
 export default function GridCell({ day, employee }: EmployeeDayProps) {
-  const timezone = useAppSelector(selectTimeZone);
   // get date from ISO string with no time data to circumvent hydration related
   // errors due to UTC time on server and local time on client
   const date = dayjs(day).format("YYYY-MM-DD");
@@ -28,16 +26,6 @@ export default function GridCell({ day, employee }: EmployeeDayProps) {
     }),
   );
   const shiftsPresent = shifts.length > 0;
-
-  if (shiftsPresent) {
-    // console.log(dayjs(day).format("MM/DD/YYYY"));
-    // console.log(shifts);
-    shifts.forEach((shift) => {
-      // console.log("employeeId:", shift.employeeId);
-      // console.log("start:", shift.start);
-      // console.log("end:", shift.end);
-    });
-  }
 
   const handleMouseEnter = () => {
     setHidden(false);

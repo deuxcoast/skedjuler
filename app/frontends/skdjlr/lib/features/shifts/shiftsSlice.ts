@@ -10,7 +10,6 @@ import {
 import { createCachedSelector } from "re-reselect";
 import { v4 as uuidv4 } from "uuid";
 import { UUID } from "crypto";
-import { selectCurrentlySelectedSchedule } from "../schedules/schedulesSlice";
 import dayjs from "dayjs";
 import { parseIsoIntoHourMin } from "@/utils/dates";
 import { current } from "immer";

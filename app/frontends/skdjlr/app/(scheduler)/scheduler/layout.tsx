@@ -37,9 +37,9 @@ export default function SchedulerLayout({ children }: AppLayoutProps) {
     (result: any) => {
       handleDrop();
       const { source, destination, draggableId } = result;
-      const [shiftId, shiftStart, shiftEnd] = draggableId.split("::");
-      const shiftStartObj = dayjs(shiftStart);
-      const shiftEndObj = dayjs(shiftEnd);
+      const [shiftId, srcShiftStart, srcShiftEnd] = draggableId.split("::");
+      const srcShiftStartObj = dayjs(srcShiftStart);
+      const srcShiftEndObj = dayjs(srcShiftEnd);
 
       // dropped outside of the scheduler grid
       if (!destination) return;
@@ -49,10 +49,10 @@ export default function SchedulerLayout({ children }: AppLayoutProps) {
       const destDayObj = dayjs(destDay);
       const destDayOfYear = destDayObj.dayOfYear();
 
-      const newShiftStart = shiftStartObj
+      const newShiftStart = srcShiftStartObj
         .dayOfYear(destDayOfYear)
         .toISOString();
-      const newShiftEnd = shiftEndObj.dayOfYear(destDayOfYear).toISOString();
+      const newShiftEnd = srcShiftEndObj.dayOfYear(destDayOfYear).toISOString();
 
       // we only care about cases where a shiftNode has been dragged into another
       // GridCell. If the cell hasn't changed, then we simply keep it where it is.

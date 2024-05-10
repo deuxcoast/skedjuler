@@ -27,7 +27,7 @@ import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { CaretDownIcon, CaretUpIcon } from "@radix-ui/react-icons";
 import { CollapsibleContent } from "@radix-ui/react-collapsible";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { useAppDispatch } from "@/lib/hooks";
 import { addScheduledShift } from "@/lib/features/scheduledShifts/scheduledShiftsSlice";
 import { v4 as uuidv4 } from "uuid";
 import { UUID } from "crypto";
@@ -315,7 +315,7 @@ export default function AddTemplateShiftForm({
                             <Select
                               value={field.value}
                               onValueChange={(value) =>
-                                handleSelectChangeNumber(field.name, value)
+                                form.setValue(field.name, value)
                               }
                               defaultValue={field.value}
                             >
@@ -417,7 +417,7 @@ export default function AddTemplateShiftForm({
                             <Select
                               value={field.value}
                               onValueChange={(value) =>
-                                handleSelectChangeNumber(field.name, value)
+                                form.setValue(field.name, value)
                               }
                               defaultValue={field.value}
                             >
