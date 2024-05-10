@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { DevTool } from "@hookform/devtools";
 
 import { Form, FormControl, FormField } from "@/components/ui/form";
 import {
@@ -23,7 +24,6 @@ import { useAppDispatch } from "@/lib/hooks";
 import { DialogClose } from "@/components/ui/dialog";
 
 const addCustomShiftFormSchema = z.object({
-  shiftTemplateId: z.string().uuid(),
   startHour: z.coerce.number(),
   startMin: z.number(),
   startAMPM: z.string(),
@@ -47,7 +47,6 @@ export default function AddCustomShiftForm({
   const defaultEndTime = dayjs(selectedSchedule.defaultShiftEnd);
 
   const defaultValues: Partial<AddCustomShiftFormValues> = {
-    shiftTemplateId: "",
     startHour: defaultStartTime.hour() % 12,
     startMin: defaultStartTime.minute(),
     startAMPM: defaultStartTime.format("A"),
@@ -206,6 +205,7 @@ export default function AddCustomShiftForm({
                     <div className="grid gap-2">
                       <Label htmlFor="startAMPM">AM/PM</Label>
                       <Select
+                        name={field.name}
                         value={field.value}
                         onValueChange={(value) =>
                           form.setValue(field.name, value)
@@ -308,6 +308,7 @@ export default function AddCustomShiftForm({
                     <div className="grid gap-2">
                       <Label htmlFor="endAMPM">AM/PM</Label>
                       <Select
+                        name={field.name}
                         value={field.value}
                         onValueChange={(value) =>
                           form.setValue(field.name, value)

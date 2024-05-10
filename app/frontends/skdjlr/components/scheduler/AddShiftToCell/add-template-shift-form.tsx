@@ -313,6 +313,7 @@ export default function AddTemplateShiftForm({
                           <div className="grid gap-2">
                             <Label htmlFor="startAMPM">AM/PM</Label>
                             <Select
+                              name={field.name}
                               value={field.value}
                               onValueChange={(value) =>
                                 form.setValue(field.name, value)
@@ -415,6 +416,7 @@ export default function AddTemplateShiftForm({
                           <div className="grid gap-2">
                             <Label htmlFor="endAMPM">AM/PM</Label>
                             <Select
+                              name={field.name}
                               value={field.value}
                               onValueChange={(value) =>
                                 form.setValue(field.name, value)
