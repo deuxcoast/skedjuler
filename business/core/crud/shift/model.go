@@ -1,8 +1,7 @@
-package user
+package shift
 
 import (
 	"net/mail"
-	"net/url"
 	"time"
 
 	"github.com/google/uuid"
@@ -10,15 +9,10 @@ import (
 
 // User represents information about an individual user.
 type User struct {
-	Id          uuid.UUID
-	FirstName   string
-	LastName    string
-	SystemRoles []Role
-	Email       mail.Address
-	ImageUrl    url.URL
-	// TODO: how do I do stuff like foreign keys. How do I explain the
-	// relationship to a business_id
-
+	ID           uuid.UUID
+	Name         string
+	Email        mail.Address
+	Roles        []Role
 	PasswordHash []byte
 	Department   string
 	Enabled      bool

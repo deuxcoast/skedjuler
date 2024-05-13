@@ -202,11 +202,11 @@ CREATE TABLE IF NOT EXISTS shift_instance_exception (
     created_date        TIMESTAMPTZ  NOT NULL,
 );
 
-CREATE TABLE IF NOT EXISTS shfit_template (
-    shift_template_id  UUID  NOT NULL,
-    role_id            UUID  NOT NULL,
-    start_time         TIME  NOT NULL,
-    end_time           TIME  NOT NULL,
+CREATE TABLE IF NOT EXISTS shift_template (
+    shift_template_id  UUID       NOT NULL,
+    role_id            UUID       NOT NULL,
+    start_time         TIMESTAMP  NOT NULL,
+    end_time           TIMESTAMP  NOT NULL,
 
     PRIMARY KEY (shift_template_id),
     FOREIGN KEY (role_id) REFERENCES roles(role_id)

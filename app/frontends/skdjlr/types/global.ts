@@ -29,8 +29,8 @@ export type Schedule = {
    * which employees are eligible for this schedule.
    */
   roles: UUID[];
-  defaultShiftStart: THourMinuteTime;
-  defaultShiftEnd: THourMinuteTime;
+  defaultShiftStart: string;
+  defaultShiftEnd: string;
 };
 
 export type Role = {
