@@ -7,10 +7,12 @@ import (
 )
 
 type ShiftTemplate struct {
-	Id        uuid.UUID
-	RoleId    uuid.UUID
-	StartTime time.Time
-	EndTime   time.Time
+	Id          uuid.UUID
+	RoleId      uuid.UUID
+	StartTime   time.Time
+	EndTime     time.Time
+	CreatedDate time.Time
+	UpdatedDate time.Time
 }
 
 type NewShiftTemplate struct {

@@ -22,8 +22,8 @@ type User struct {
 	PasswordHash []byte
 	Department   string
 	Enabled      bool
-	DateCreated  time.Time
-	DateUpdated  time.Time
+	CreatedDate  time.Time
+	UpdatedDate  time.Time
 }
 
 // NewUser contains information needed to create a new user.

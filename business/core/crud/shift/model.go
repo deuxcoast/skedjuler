@@ -8,16 +8,22 @@ import (
 )
 
 // User represents information about an individual user.
-type User struct {
-	ID           uuid.UUID
-	Name         string
-	Email        mail.Address
-	Roles        []Role
-	PasswordHash []byte
-	Department   string
-	Enabled      bool
-	DateCreated  time.Time
-	DateUpdated  time.Time
+type Shift struct {
+	ID            uuid.UUID
+	EmployeeId    uuid.UUID
+	RoleId        uuid.UUID
+	StartDate     time.Time
+	EndDate       time.Time
+	StartTime     time.Time
+	EndTime       time.Time
+	Published     bool
+	PublishedById uuid.UUID
+	PublishedDate time.Time
+	IsRecurring   bool
+	CreatedById   uuid.UUID
+	ParentShiftId uuid.UUID
+	DateCreated   time.Time
+	DateUpdated   time.Time
 }
 
 // NewUser contains information needed to create a new user.

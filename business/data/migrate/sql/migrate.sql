@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS user (
     business_id   UUID        NOT NULL,
 	password_hash TEXT        NOT NULL,
     enabled       BOOLEAN     NOT NULL,
-	date_created  TIMESTAMPTZ NOT NULL,
-	date_updated  TIMESTAMPTZ NOT NULL,
+	created_date  TIMESTAMPTZ NOT NULL,
+	updated_date  TIMESTAMPTZ NOT NULL,
 
 	PRIMARY KEY (user_id),
     FOREIGN KEY (business_id) REFERENCES business(business_id) ON DELETE CASCADE
@@ -27,9 +27,9 @@ CREATE TABLE IF NOT EXISTS employee (
     email             TEXT  UNIQUE   NOT NULL,
     phone_number      TEXT           NULL,
     hourly_wage       NUMERIC(12, 2) NULL,
-    date_created      TIMESTAMPTZ    NOT NULL,
-    date_updated      TIMESTAMPTZ    NOT NULL,
-    created_by        UUID           NOT NULL,
+    created_date      TIMESTAMPTZ    NOT NULL,
+    updated_date      TIMESTAMPTZ    NOT NULL,
+    created_by_id        UUID           NOT NULL,
 
 
     PRIMARY KEY (employee_id),
@@ -44,9 +44,9 @@ CREATE TABLE IF NOT EXISTS employee_role (
     role_title        TEXT         NOT NULL,
     employee_id       UUID         NOT NULL,
     business_id       UUID         NOT NULL,
-    date_created      TIMESTAMPTZ  NOT NULL,
-    date_updated      TIMESTAMPTZ  NOT NULL,
-    created_by        UUID         NOT NULL,
+    created_date      TIMESTAMPTZ  NOT NULL,
+    updated_date      TIMESTAMPTZ  NOT NULL,
+    created_by_id        UUID         NOT NULL,
 
     PRIMARY KEY (employee_role_id),
     FOREIGN KEY (employee_id) REFERENCES employee(employee_id),
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS business (
     image_url       TEXT         NULL,
     created_date    TIMESTAMPTZ  NOT NULL,
     updated_date    TIMESTAMPTZ  NOT NULL,
-    created_by      UUID         NOT NULL,
+    created_by_id      UUID         NOT NULL,
     
 
     PRIMARY KEY (business_id),
@@ -88,8 +88,8 @@ CREATE TABLE IF NOT EXISTS products (
 	name         TEXT           NOT NULL,
     cost         NUMERIC(10, 2) NOT NULL,
 	quantity     INT            NOT NULL,
-	date_created TIMESTAMP      NOT NULL,
-	date_updated TIMESTAMP      NOT NULL,
+	created_date TIMESTAMP      NOT NULL,
+	updated_date TIMESTAMP      NOT NULL,
 
 	PRIMARY KEY (product_id),
 	FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
@@ -104,8 +104,8 @@ SELECT
 	p.name,
     p.cost,
 	p.quantity,
-    p.date_created,
-    p.date_updated,
+    p.created_date,
+    p.updated_date,
     u.name AS user_name
 FROM
     products AS p
@@ -124,8 +124,8 @@ CREATE TABLE IF NOT EXISTS homes (
     city          TEXT       NOT NULL,
     state         TEXT       NOT NULL,
     country       TEXT       NOT NULL,
-    date_created  TIMESTAMP  NOT NULL,
-    date_updated  TIMESTAMP  NOT NULL,
+    created_date  TIMESTAMP  NOT NULL,
+    updated_date  TIMESTAMP  NOT NULL,
 
     PRIMARY KEY (home_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
@@ -142,10 +142,10 @@ CREATE TABLE IF NOT EXISTS shift (
     start_time       TIMESTAMPTZ  NOT NULL,
     end_time         TIMESTAMPTZ  NOT NULL,
     published        BOOLEAN      NOT NULL,
-    published_by     UUID         NULL,
+    published_by_id     UUID         NULL,
     published_date   TIMESTAMPTZ  NULL,
     is_recurring     BOOLEAN      NOT NULL,
-    created_by       UUID         NOT NULL,
+    created_by_id       UUID         NOT NULL,
     created_date     TIMESTAMPTZ  NOT NULL,
     updated_date     TIMESTAMPTZ  NOT NULL,
     parent_shift_id  UUID         NULL,
@@ -198,15 +198,17 @@ CREATE TABLE IF NOT EXISTS shift_instance_exception (
     end_date            DATE         NOT NULL,
     start_time          TIMESTAMPTZ  NOT NULL,
     end_time            TIMESTAMPTZ  NOT NULL,
-    created_by          UUID         NOT NULL,
+    created_by_id       UUID         NOT NULL,
     created_date        TIMESTAMPTZ  NOT NULL,
 );
 
 CREATE TABLE IF NOT EXISTS shift_template (
-    shift_template_id  UUID       NOT NULL,
-    role_id            UUID       NOT NULL,
-    start_time         TIMESTAMP  NOT NULL,
-    end_time           TIMESTAMP  NOT NULL,
+    shift_template_id  UUID        NOT NULL,
+    role_id            UUID        NOT NULL,
+    start_time         TIMESTAMP   NOT NULL,
+    end_time           TIMESTAMP   NOT NULL,
+    created_date       TIMESTAMPTZ NOT NULL,
+    updated_date       TIMESTAMPTZ NOT NULL,
 
     PRIMARY KEY (shift_template_id),
     FOREIGN KEY (role_id) REFERENCES roles(role_id)
