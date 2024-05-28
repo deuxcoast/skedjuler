@@ -1,7 +1,6 @@
 package userdb
 
 import (
-	"database/sql"
 	"fmt"
 	"net/mail"
 	"time"
@@ -12,36 +11,33 @@ import (
 )
 
 type dbUser struct {
-	ID           uuid.UUID      `db:"user_id"`
-	Name         string         `db:"name"`
+	Id           uuid.UUID      `db:"user_id"`
+	FirstName    string         `db:"first_name"`
+	LastName     string         `db:"last_name"`
 	Email        string         `db:"email"`
-	Roles        dbarray.String `db:"roles"`
+	SystemRoles  dbarray.String `db:"system_roles"`
 	PasswordHash []byte         `db:"password_hash"`
-	Department   sql.NullString `db:"department"`
 	Enabled      bool           `db:"enabled"`
-	DateCreated  time.Time      `db:"date_created"`
-	DateUpdated  time.Time      `db:"date_updated"`
+	CreatedDate  time.Time      `db:"created_date"`
+	UpdatedDate  time.Time      `db:"updated_date"`
 }
 
 func toDBUser(usr user.User) dbUser {
-	roles := make([]string, len(usr.Roles))
-	for i, role := range usr.Roles {
-		roles[i] = role.Name()
+	systemRoles := make([]string, len(usr.SystemRoles))
+	for i, role := range usr.SystemRoles {
+		systemRoles[i] = role.Name()
 	}
 
 	return dbUser{
-		ID:           usr.ID,
-		Name:         usr.Name,
+		Id:           usr.Id,
+		FirstName:    usr.FirstName,
+		LastName:     usr.LastName,
 		Email:        usr.Email.Address,
-		Roles:        roles,
+		SystemRoles:  systemRoles,
 		PasswordHash: usr.PasswordHash,
-		Department: sql.NullString{
-			String: usr.Department,
-			Valid:  usr.Department != "",
-		},
-		Enabled:     usr.Enabled,
-		DateCreated: usr.DateCreated.UTC(),
-		DateUpdated: usr.DateUpdated.UTC(),
+		Enabled:      usr.Enabled,
+		CreatedDate:  usr.CreatedDate.UTC(),
+		UpdatedDate:  usr.UpdatedDate.UTC(),
 	}
 }
 
@@ -50,25 +46,27 @@ func toCoreUser(dbUsr dbUser) (user.User, error) {
 		Address: dbUsr.Email,
 	}
 
-	roles := make([]user.Role, len(dbUsr.Roles))
-	for i, value := range dbUsr.Roles {
+	systemRoles := make([]user.SystemRole, len(dbUsr.SystemRoles))
+	for i, value := range dbUsr.SystemRoles {
 		var err error
-		roles[i], err = user.ParseRole(value)
+		systemRoles[i], err = user.ParseRole(value)
 		if err != nil {
 			return user.User{}, fmt.Errorf("parse role: %w", err)
 		}
 	}
 
 	usr := user.User{
-		ID:           dbUsr.ID,
-		Name:         dbUsr.Name,
+		Id:           dbUsr.Id,
+		FirstName:    dbUsr.FirstName,
+		LastName:     dbUsr.LastName,
 		Email:        addr,
-		Roles:        roles,
+		SystemRoles:  systemRoles,
 		PasswordHash: dbUsr.PasswordHash,
 		Enabled:      dbUsr.Enabled,
-		Department:   dbUsr.Department.String,
-		DateCreated:  dbUsr.DateCreated.In(time.Local),
-		DateUpdated:  dbUsr.DateUpdated.In(time.Local),
+		// TODO: Do we want to store the created date in local time here?
+		// Wouldn't UTC be better?
+		CreatedDate: dbUsr.CreatedDate.In(time.Local),
+		UpdatedDate: dbUsr.UpdatedDate.In(time.Local),
 	}
 
 	return usr, nil

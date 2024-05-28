@@ -24,11 +24,11 @@ var ErrForbidden = errors.New("attempted action is not allowed")
 // Claims represents the authorization claims transmitted via a JWT.
 type Claims struct {
 	jwt.RegisteredClaims
-	Roles []user.Role `json:"roles"`
+	Roles []user.SystemRole `json:"roles"`
 }
 
 // HasRole checks if the specified role exists.
-func (c Claims) HasRole(r user.Role) bool {
+func (c Claims) HasRole(r user.SystemRole) bool {
 	for _, role := range c.Roles {
 		if role == r {
 			return true

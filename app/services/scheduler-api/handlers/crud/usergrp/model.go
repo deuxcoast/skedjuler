@@ -11,33 +11,35 @@ import (
 
 // AppUser represents information about an individual user.
 type AppUser struct {
-	ID           string   `json:"id"`
-	Name         string   `json:"name"`
+	Id           string   `json:"id"`
+	FirstName    string   `json:"firstName"`
+	LastName     string   `json:"lastName"`
 	Email        string   `json:"email"`
-	Roles        []string `json:"roles"`
+	SystemRoles  []string `json:"systemRoles"`
 	PasswordHash []byte   `json:"-"`
 	Department   string   `json:"department"`
 	Enabled      bool     `json:"enabled"`
-	DateCreated  string   `json:"dateCreated"`
-	DateUpdated  string   `json:"dateUpdated"`
+	CreatedDate  string   `json:"createdDate"`
+	UpdatedDate  string   `json:"updatedDate"`
 }
 
 func toAppUser(usr user.User) AppUser {
-	roles := make([]string, len(usr.Roles))
-	for i, role := range usr.Roles {
-		roles[i] = role.Name()
+	systemRoles := make([]string, len(usr.SystemRoles))
+	for i, role := range usr.SystemRoles {
+		systemRoles[i] = role.Name()
 	}
 
 	return AppUser{
-		ID:           usr.ID.String(),
-		Name:         usr.Name,
+		Id:           usr.Id.String(),
+		FirstName:    usr.FirstName,
+		LastName:     usr.LastName,
 		Email:        usr.Email.Address,
-		Roles:        roles,
+		SystemRoles:  systemRoles,
 		PasswordHash: usr.PasswordHash,
 		Department:   usr.Department,
 		Enabled:      usr.Enabled,
-		DateCreated:  usr.DateCreated.Format(time.RFC3339),
-		DateUpdated:  usr.DateUpdated.Format(time.RFC3339),
+		CreatedDate:  usr.CreatedDate.Format(time.RFC3339),
+		UpdatedDate:  usr.UpdatedDate.Format(time.RFC3339),
 	}
 }
 
@@ -61,13 +63,13 @@ type AppNewUser struct {
 }
 
 func toCoreNewUser(app AppNewUser) (user.NewUser, error) {
-	roles := make([]user.Role, len(app.Roles))
+	systemRoles := make([]user.SystemRole, len(app.Roles))
 	for i, roleStr := range app.Roles {
 		role, err := user.ParseRole(roleStr)
 		if err != nil {
 			return user.NewUser{}, fmt.Errorf("parse: %w", err)
 		}
-		roles[i] = role
+		systemRoles[i] = role
 	}
 
 	addr, err := mail.ParseAddress(app.Email)
@@ -78,8 +80,7 @@ func toCoreNewUser(app AppNewUser) (user.NewUser, error) {
 	usr := user.NewUser{
 		Name:            app.Name,
 		Email:           *addr,
-		Roles:           roles,
-		Department:      app.Department,
+		SystemRoles:     systemRoles,
 		Password:        app.Password,
 		PasswordConfirm: app.PasswordConfirm,
 	}
@@ -108,15 +109,15 @@ type AppUpdateUser struct {
 }
 
 func toCoreUpdateUser(app AppUpdateUser) (user.UpdateUser, error) {
-	var roles []user.Role
+	var systemRoles []user.SystemRole
 	if app.Roles != nil {
-		roles = make([]user.Role, len(app.Roles))
+		systemRoles = make([]user.SystemRole, len(app.Roles))
 		for i, roleStr := range app.Roles {
 			role, err := user.ParseRole(roleStr)
 			if err != nil {
 				return user.UpdateUser{}, fmt.Errorf("parse: %w", err)
 			}
-			roles[i] = role
+			systemRoles[i] = role
 		}
 	}
 
@@ -132,8 +133,7 @@ func toCoreUpdateUser(app AppUpdateUser) (user.UpdateUser, error) {
 	nu := user.UpdateUser{
 		Name:            app.Name,
 		Email:           addr,
-		Roles:           roles,
-		Department:      app.Department,
+		SystemRoles:     systemRoles,
 		Password:        app.Password,
 		PasswordConfirm: app.PasswordConfirm,
 		Enabled:         app.Enabled,

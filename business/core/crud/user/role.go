@@ -4,26 +4,26 @@ import "fmt"
 
 // Set of possible roles for a user.
 var (
-	RoleAdmin = Role{"ADMIN"}
-	RoleUser  = Role{"USER"}
+	RoleAdmin = SystemRole{"ADMIN"}
+	RoleUser  = SystemRole{"USER"}
 )
 
 // Set of known roles.
-var roles = map[string]Role{
+var roles = map[string]SystemRole{
 	RoleAdmin.name: RoleAdmin,
 	RoleUser.name:  RoleUser,
 }
 
-// Role represents a role in the system.
-type Role struct {
+// SystemRole represents a role in the system.
+type SystemRole struct {
 	name string
 }
 
 // ParseRole parses the string value and returns a role if one exists.
-func ParseRole(value string) (Role, error) {
+func ParseRole(value string) (SystemRole, error) {
 	role, exists := roles[value]
 	if !exists {
-		return Role{}, fmt.Errorf("invalid role %q", value)
+		return SystemRole{}, fmt.Errorf("invalid role %q", value)
 	}
 
 	return role, nil
@@ -31,7 +31,7 @@ func ParseRole(value string) (Role, error) {
 
 // MustParseRole parses the string value and returns a role if one exists. If
 // an error occurs the function panics.
-func MustParseRole(value string) Role {
+func MustParseRole(value string) SystemRole {
 	role, err := ParseRole(value)
 	if err != nil {
 		panic(err)
@@ -41,12 +41,12 @@ func MustParseRole(value string) Role {
 }
 
 // Name returns the name of the role.
-func (r Role) Name() string {
+func (r SystemRole) Name() string {
 	return r.name
 }
 
 // UnmarshalText implement the unmarshal interface for JSON conversions.
-func (r *Role) UnmarshalText(data []byte) error {
+func (r *SystemRole) UnmarshalText(data []byte) error {
 	role, err := ParseRole(string(data))
 	if err != nil {
 		return err
@@ -57,11 +57,11 @@ func (r *Role) UnmarshalText(data []byte) error {
 }
 
 // MarshalText implement the marshal interface for JSON conversions.
-func (r Role) MarshalText() ([]byte, error) {
+func (r SystemRole) MarshalText() ([]byte, error) {
 	return []byte(r.name), nil
 }
 
 // Equal provides support for the go-cmp package and testing.
-func (r Role) Equal(r2 Role) bool {
+func (r SystemRole) Equal(r2 SystemRole) bool {
 	return r.name == r2.name
 }

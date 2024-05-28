@@ -40,7 +40,7 @@ func UserAdd(log *logger.Logger, cfg sqldb.Config, name, email, password string)
 		Email:           *addr,
 		Password:        password,
 		PasswordConfirm: password,
-		Roles:           []user.Role{user.RoleAdmin, user.RoleUser},
+		SystemRoles:     []user.SystemRole{user.RoleAdmin, user.RoleUser},
 	}
 
 	usr, err := core.Create(ctx, nu)
@@ -48,6 +48,6 @@ func UserAdd(log *logger.Logger, cfg sqldb.Config, name, email, password string)
 		return fmt.Errorf("create user: %w", err)
 	}
 
-	fmt.Println("user id:", usr.ID)
+	fmt.Println("user id:", usr.Id)
 	return nil
 }

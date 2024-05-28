@@ -44,7 +44,7 @@ func Test_Auth(t *testing.T) {
 			ExpiresAt: jwt.NewNumericDate(time.Now().UTC().Add(time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now().UTC()),
 		},
-		Roles: []user.Role{user.RoleAdmin},
+		Roles: []user.SystemRole{user.RoleAdmin},
 	}
 	userID := uuid.MustParse(claims.Subject)
 
@@ -82,7 +82,7 @@ func Test_Auth(t *testing.T) {
 			ExpiresAt: jwt.NewNumericDate(time.Now().UTC().Add(time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now().UTC()),
 		},
-		Roles: []user.Role{user.RoleUser},
+		Roles: []user.SystemRole{user.RoleUser},
 	}
 	userID = uuid.MustParse(claims.Subject)
 
@@ -125,7 +125,7 @@ func Test_Auth(t *testing.T) {
 			ExpiresAt: jwt.NewNumericDate(time.Now().UTC().Add(time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now().UTC()),
 		},
-		Roles: []user.Role{user.RoleUser},
+		Roles: []user.SystemRole{user.RoleUser},
 	}
 	userID = uuid.MustParse("9e979baa-61c9-4b50-81f2-f216d53f5c15")
 
@@ -153,7 +153,7 @@ func Test_Auth(t *testing.T) {
 			ExpiresAt: jwt.NewNumericDate(time.Now().UTC().Add(time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now().UTC()),
 		},
-		Roles: []user.Role{user.RoleUser, user.RoleAdmin},
+		Roles: []user.SystemRole{user.RoleUser, user.RoleAdmin},
 	}
 	userID = uuid.MustParse("9e979baa-61c9-4b50-81f2-f216d53f5c15")
 
@@ -181,7 +181,7 @@ func Test_Auth(t *testing.T) {
 			ExpiresAt: jwt.NewNumericDate(time.Now().UTC().Add(time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now().UTC()),
 		},
-		Roles: []user.Role{user.RoleUser},
+		Roles: []user.SystemRole{user.RoleUser},
 	}
 	userID = uuid.MustParse("9e979baa-61c9-4b50-81f2-f216d53f5c15")
 
@@ -209,7 +209,7 @@ func Test_Auth(t *testing.T) {
 			ExpiresAt: jwt.NewNumericDate(time.Now().UTC().Add(time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now().UTC()),
 		},
-		Roles: []user.Role{user.RoleAdmin},
+		Roles: []user.SystemRole{user.RoleAdmin},
 	}
 	userID = uuid.MustParse("9e979baa-61c9-4b50-81f2-f216d53f5c15")
 

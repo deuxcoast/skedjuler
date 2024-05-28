@@ -10,15 +10,13 @@ import (
 
 // User represents information about an individual user.
 type User struct {
-	Id          uuid.UUID
-	FirstName   string
-	LastName    string
-	SystemRoles []Role
-	Email       mail.Address
-	ImageUrl    url.URL
-	// TODO: how do I do stuff like foreign keys. How do I explain the
-	// relationship to a business_id
-
+	Id           uuid.UUID
+	FirstName    string
+	LastName     string
+	SystemRoles  []SystemRole
+	Email        mail.Address
+	ImageUrl     url.URL
+	BusinessId   uuid.UUID
 	PasswordHash []byte
 	Department   string
 	Enabled      bool
@@ -30,8 +28,7 @@ type User struct {
 type NewUser struct {
 	Name            string
 	Email           mail.Address
-	Roles           []Role
-	Department      string
+	SystemRoles     []SystemRole
 	Password        string
 	PasswordConfirm string
 }
@@ -40,8 +37,7 @@ type NewUser struct {
 type UpdateUser struct {
 	Name            *string
 	Email           *mail.Address
-	Roles           []Role
-	Department      *string
+	SystemRoles     []SystemRole
 	Password        *string
 	PasswordConfirm *string
 	Enabled         *bool

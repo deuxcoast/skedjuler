@@ -44,20 +44,20 @@ type AppNewTran struct {
 type AppNewUser struct {
 	Name            string   `json:"name" validate:"required"`
 	Email           string   `json:"email" validate:"required,email"`
-	Roles           []string `json:"roles" validate:"required"`
+	SystemRoles     []string `json:"roles" validate:"required"`
 	Department      string   `json:"department"`
 	Password        string   `json:"password" validate:"required"`
 	PasswordConfirm string   `json:"passwordConfirm" validate:"eqfield=Password"`
 }
 
 func toCoreNewUser(app AppNewUser) (user.NewUser, error) {
-	roles := make([]user.Role, len(app.Roles))
-	for i, roleStr := range app.Roles {
+	systemRoles := make([]user.SystemRole, len(app.SystemRoles))
+	for i, roleStr := range app.SystemRoles {
 		role, err := user.ParseRole(roleStr)
 		if err != nil {
 			return user.NewUser{}, fmt.Errorf("parsing role: %w", err)
 		}
-		roles[i] = role
+		systemRoles[i] = role
 	}
 
 	addr, err := mail.ParseAddress(app.Email)
@@ -68,8 +68,7 @@ func toCoreNewUser(app AppNewUser) (user.NewUser, error) {
 	usr := user.NewUser{
 		Name:            app.Name,
 		Email:           *addr,
-		Roles:           roles,
-		Department:      app.Department,
+		SystemRoles:     systemRoles,
 		Password:        app.Password,
 		PasswordConfirm: app.PasswordConfirm,
 	}
